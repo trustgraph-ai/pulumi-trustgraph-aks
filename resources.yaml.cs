@@ -60,7 +60,7 @@ items:
           - --tool-type
           - --tool-description
           - --tool-argument
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: agent-manager
           resources:
             limits:
@@ -117,7 +117,7 @@ items:
               secretKeyRef:
                 key: gateway-secret
                 name: gateway-secret
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: api-gateway
           ports:
           - containerPort: 8000
@@ -243,7 +243,7 @@ items:
           - '1000'
           - --chunk-overlap
           - '50'
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: chunker
           resources:
             limits:
@@ -290,7 +290,7 @@ items:
           - document-embeddings
           - -p
           - pulsar://pulsar:6650
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: document-embeddings
           resources:
             limits:
@@ -343,7 +343,7 @@ items:
           - non-persistent://tg/request/prompt-rag
           - --prompt-response-queue
           - non-persistent://tg/response/prompt-rag
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: document-rag
           resources:
             limits:
@@ -392,7 +392,7 @@ items:
           - pulsar://pulsar:6650
           - -m
           - sentence-transformers/all-MiniLM-L6-v2
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: embeddings
           resources:
             limits:
@@ -967,7 +967,7 @@ items:
           - graph-embeddings
           - -p
           - pulsar://pulsar:6650
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: graph-embeddings
           resources:
             limits:
@@ -1026,7 +1026,7 @@ items:
           - '400'
           - --max-path-length
           - '2'
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: graph-rag
           resources:
             limits:
@@ -1073,7 +1073,7 @@ items:
           - kg-extract-definitions
           - -p
           - pulsar://pulsar:6650
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: kg-extract-definitions
           resources:
             limits:
@@ -1120,7 +1120,7 @@ items:
           - kg-extract-relationships
           - -p
           - pulsar://pulsar:6650
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: kg-extract-relationships
           resources:
             limits:
@@ -1167,7 +1167,7 @@ items:
           - kg-extract-topics
           - -p
           - pulsar://pulsar:6650
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: kg-extract-topics
           resources:
             limits:
@@ -1214,7 +1214,7 @@ items:
           - metering
           - -p
           - pulsar://pulsar:6650
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: metering
           resources:
             limits:
@@ -1263,7 +1263,7 @@ items:
           - pulsar://pulsar:6650
           - -i
           - non-persistent://tg/response/text-completion-rag
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: metering-rag
           resources:
             limits:
@@ -1310,7 +1310,7 @@ items:
           - pdf-decoder
           - -p
           - pulsar://pulsar:6650
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: pdf-decoder
           resources:
             limits:
@@ -1687,7 +1687,7 @@ items:
           - extract-relationships={"items":{"properties":{"object":{"type":"string"},"object-entity":{"type":"boolean"},"predicate":{"type":"string"},"subject":{"type":"string"}},"required":["subject","predicate","object","object-entity"],"type":"object"},"type":"array"}
           - extract-topics={"items":{"properties":{"definition":{"type":"string"},"topic":{"type":"string"}},"required":["topic","definition"],"type":"object"},"type":"array"}
           - --prompt-term
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: prompt
           resources:
             limits:
@@ -1944,7 +1944,7 @@ items:
           - extract-relationships={"items":{"properties":{"object":{"type":"string"},"object-entity":{"type":"boolean"},"predicate":{"type":"string"},"subject":{"type":"string"}},"required":["subject","predicate","object","object-entity"],"type":"object"},"type":"array"}
           - extract-topics={"items":{"properties":{"definition":{"type":"string"},"topic":{"type":"string"}},"required":["topic","definition"],"type":"object"},"type":"array"}
           - --prompt-term
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: prompt-rag
           resources:
             limits:
@@ -2225,7 +2225,7 @@ items:
           - tg-init-pulsar
           - -p
           - http://pulsar:8080
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: init-trustgraph
           resources:
             limits:
@@ -2376,7 +2376,7 @@ items:
           - pulsar://pulsar:6650
           - -t
           - http://qdrant:6333
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: query-doc-embeddings
           resources:
             limits:
@@ -2425,7 +2425,7 @@ items:
           - pulsar://pulsar:6650
           - -t
           - http://qdrant:6333
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: query-graph-embeddings
           resources:
             limits:
@@ -2474,7 +2474,7 @@ items:
           - pulsar://pulsar:6650
           - -g
           - cassandra
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: query-triples
           resources:
             limits:
@@ -2523,7 +2523,7 @@ items:
           - pulsar://pulsar:6650
           - -t
           - http://qdrant:6333
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: store-doc-embeddings
           resources:
             limits:
@@ -2572,7 +2572,7 @@ items:
           - pulsar://pulsar:6650
           - -t
           - http://qdrant:6333
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: store-graph-embeddings
           resources:
             limits:
@@ -2621,7 +2621,7 @@ items:
           - pulsar://pulsar:6650
           - -g
           - cassandra
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: store-triples
           resources:
             limits:
@@ -2688,7 +2688,7 @@ items:
               secretKeyRef:
                 key: azure-model
                 name: azure-openai-credentials
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: text-completion
           resources:
             limits:
@@ -2759,7 +2759,7 @@ items:
               secretKeyRef:
                 key: azure-model
                 name: azure-openai-credentials
-          image: docker.io/trustgraph/trustgraph-flow:0.21.6
+          image: docker.io/trustgraph/trustgraph-flow:0.21.9
           name: text-completion-rag
           resources:
             limits:
