@@ -90,7 +90,9 @@ credentials.
 
 You can edit:
 - settings in `Pulumi.STACKNAME.yaml` e.g. Pulumi.azure.yaml
-- change `resources.yaml` with whatever you want to deploy, or
+- change `resources.yaml` with whatever you want to deploy.
+  The resources.yaml file was created using the TrustGraph config portal,
+  so you can re-generate your own.
 
 The `Pulumi.STACKNAME.yaml` configuration file contains settings for:
 
