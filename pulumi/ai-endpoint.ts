@@ -5,18 +5,18 @@ import * as cogsvcs from "@pulumi/azure-native/cognitiveservices/v20241001";
 
 import { workspace } from './ai-workspace';
 import { resourceGroup } from './resource-group';
-import { location, prefix } from './config';
+import { location, prefix, aiEndpointModel } from './config';
 import { azureProvider } from './azure-provider';
 
 const endpoint = new mls.ServerlessEndpoint("ai-endpoint", {
-    name: workspace.name.apply(w => `${prefix}-phi-4`),
+    name: workspace.name.apply(w => `${prefix}-endpoint`),
     resourceGroupName: resourceGroup.name,
     workspaceName: workspace.name,
     location: location,
     serverlessEndpointProperties: {
         authMode: "key",
         modelSettings: {
-            modelId: "azureml://registries/azureml/models/Phi-4",
+            modelId: aiEndpointModel,
         },
     },
     identity: {

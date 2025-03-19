@@ -72,7 +72,7 @@ pulumi login --local
 ```
 
 Pulumi operates in stacks, each stack is a separate deployment.  The
-git repo contains the configuration for a single stack `analysis`, so you
+git repo contains the configuration for a single stack `azure`, so you
 could:
 
 ```
@@ -89,8 +89,24 @@ credentials.
 ## Modify the local configuration to do what you want
 
 You can edit:
-- settings in `Pulumi.analysis.yaml`
-- change `resourcecs.yaml` with whatever you want to deploy, or
+- settings in `Pulumi.STACKNAME.yaml` e.g. Pulumi.azure.yaml
+- change `resources.yaml` with whatever you want to deploy, or
+
+The `Pulumi.STACKNAME.yaml` configuration file contains settings for:
+
+- `trustgraph-azure:location` - Azure deployment location
+- `trustgraph-azure:environment` - Name of the environment you are deploying
+  use a name like: dev, prod etc.
+- `trustgraph-azure:ai-endpoint-model` - the Machine Learning Services
+  model to deploy.  Look in the model catalog for a Model ID
+  e.g. `azureml://registries/azureml/models/Phi-4`.
+- `trustgraph-azure:ai-openai-model` - the OpenAI model name e.g. gpt-4o-mini
+- `trustgraph-azure:ai-openai-version` - the OpenAI model version which is
+  in date format e.g. "2024-07-18".  Use quotes so that Pulumi doesn't
+  interpret as a date
+- `trustgraph-azure:ai-openai-format` - model format e.g. OpenAI
+- `trustgraph-azure:ai-openai-rai-policy` - the content filtering
+  policy.  RAI = Responsible AI?  e.g. `Microsoft.DefaultV2`.
 
 ## Deploy
 
@@ -112,6 +128,12 @@ To connect to the Kubernetes cluster...
 kubectl --kubeconfig kubeconfig -n trustgraph get pods
 ```
 
+An error has been observed on creation while creating the Storage Account,
+stating "parallel access to resources" which hasn't been diagnosed -
+assuming it must be a glitch in Azure.  The work-around on deploy errors
+is to retry `pulumi up` - it's a retryable command and will continue from
+where it left off.
+
 ## Use the system
 
 To get access to TrustGraph using the `kube.cfg` file, set up some
@@ -127,4 +149,13 @@ kubectl --kubeconfig kube.cfg port-forward service/grafana 3000:3000
 This will allow you to access Grafana and the Workbench UI from your local
 browser using `http://localhost:3000` and `http://localhost:8888`
 respectively.
+
+
+## Deploy
+
+```
+pulumi destroy
+```
+
+Just say yes.
 

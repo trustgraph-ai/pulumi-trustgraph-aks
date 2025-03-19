@@ -5,6 +5,9 @@ import * as random from "@pulumi/random";
 import { resourceGroup } from './resource-group';
 import { azureProvider } from './azure-provider';
 import { location, prefix } from './config';
+import {
+    aiOpenaiModel, aiOpenaiFormat, aiOpenaiVersion, aiOpenaiRaiPolicy
+} from './config';
 
 const randId = new random.RandomUuid(
     "openai-account-suffix",
@@ -41,11 +44,11 @@ export const openaiDeployment = new cogsvcs.Deployment(
         deploymentName: prefix + "-openai",
         properties: {
             model: {
-                name: "gpt-4o-mini",
-                format: "OpenAI",
-                version: "2024-07-18",
+                name: aiOpenaiModel,
+                format: aiOpenaiFormat,
+                version: aiOpenaiVersion,
             },
-            raiPolicyName: "Microsoft.DefaultV2",
+            raiPolicyName: aiOpenaiRaiPolicy,
             versionUpgradeOption: "OnceNewDefaultVersionAvailable",
         },
         sku: {

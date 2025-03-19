@@ -26,3 +26,11 @@ export const prefix = "trustgraph-" + environment;
 export const vmSize = "Standard_A4_v2";
 export const vmCount = 2;
 
+// AI stuff
+export const aiEndpointModel = cfg.require("ai-endpoint-model");
+
+export const aiOpenaiModel = cfg.require("ai-openai-model");
+export const aiOpenaiVersion = cfg.require("ai-openai-version");
+export const aiOpenaiFormat = cfg.require("ai-openai-format");
+export const aiOpenaiRaiPolicy = cfg.require("ai-openai-rai-policy");
+
