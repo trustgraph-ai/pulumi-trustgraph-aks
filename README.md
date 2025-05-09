@@ -81,7 +81,7 @@ pulumi stack init azure
 
 and it will use the configuration in `Pulumi.azure.yaml`.
 
-## Configure your environment with AWS credentials
+## Configure your environment with Azure credentials
 
 Standard Azure client configuration e.g. use `az login` to configure
 credentials.
