@@ -2610,12 +2610,12 @@ items:
             valueFrom:
               secretKeyRef:
                 key: azure-token
-                name: azure-credentials
+                name: azure-ai-credentials
           - name: AZURE_ENDPOINT
             valueFrom:
               secretKeyRef:
                 key: azure-endpoint
-                name: azure-credentials
+                name: azure-ai-credentials
           image: docker.io/trustgraph/trustgraph-flow:0.23.22
           name: text-completion-rag
           resources:
