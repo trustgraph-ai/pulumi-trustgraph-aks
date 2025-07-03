@@ -23,8 +23,8 @@ export const tagsSep = Object.entries(tags).map(
 export const prefix = "trustgraph-" + environment;
 
 // TrustGraph version
-export const vmSize = "Standard_A4_v2";
-export const vmCount = 2;
+export const vmSize = cfg.require("node-size");
+export const vmCount = Number(cfg.require("node-count"));
 
 // AI stuff
 export const aiEndpointModel = cfg.require("ai-endpoint-model");

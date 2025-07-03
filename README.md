@@ -81,7 +81,7 @@ pulumi stack init azure
 
 and it will use the configuration in `Pulumi.azure.yaml`.
 
-## Configure your environment with AWS credentials
+## Configure your environment with Azure credentials
 
 Standard Azure client configuration e.g. use `az login` to configure
 credentials.
@@ -127,7 +127,7 @@ If everything works:
 To connect to the Kubernetes cluster...
 
 ```
-kubectl --kubeconfig kubeconfig -n trustgraph get pods
+kubectl --kubeconfig kube.cfg -n trustgraph get pods
 ```
 
 An error has been observed on creation while creating the Storage Account,
@@ -143,9 +143,9 @@ port-forwarding.  You'll need multiple terminal windows to run each of
 these commands:
 
 ```
-kubectl --kubeconfig kube.cfg port-forward service/api-gateway 8088:8088
-kubectl --kubeconfig kube.cfg port-forward service/workbench-ui 8888:8888
-kubectl --kubeconfig kube.cfg port-forward service/grafana 3000:3000
+kubectl --kubeconfig kube.cfg -n trustgraph port-forward service/api-gateway 8088:8088
+kubectl --kubeconfig kube.cfg -n trustgraph port-forward service/workbench-ui 8888:8888
+kubectl --kubeconfig kube.cfg -n trustgraph port-forward service/grafana 3000:3000
 ```
 
 This will allow you to access Grafana and the Workbench UI from your local
