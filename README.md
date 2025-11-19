@@ -169,8 +169,10 @@ AI endpoint hostname specified in the Pulumi config.
 ```
 python3 -m venv env
 . env/bin/activate
-pip install --upgrade git+https://github.com/trustgraph-ai/trustgraph-templates@5e839db05e9e278374d510c9cdd0c02ade12aabd
-tg-configurator -t 1.4 -v 1.4.19 --platform aks-k8s -i config-mls.json -R > resources.yaml.mls
-tg-configurator -t 1.4 -v 1.4.19 --platform aks-k8s -i config-cs.json -R > resources.yaml.cs
+pip install --upgrade git+https://github.com/trustgraph-ai/trustgraph-templates@master
+tg-configurator -i config-cs.json -t 1.5 -v 1.5.7 --platform gcp-k8s -R > resources.yaml.cs
+tg-configurator -i config-mls.json -t 1.5 -v 1.5.7 --platform gcp-k8s -R > resources.yaml.mls
 ```
+
+
 

@@ -52,7 +52,7 @@ export const openaiDeployment = new cogsvcs.Deployment(
             versionUpgradeOption: "OnceNewDefaultVersionAvailable",
         },
         sku: {
-            capacity: 250,
+            capacity: 200,
             name: "GlobalStandard",
         },
     },
