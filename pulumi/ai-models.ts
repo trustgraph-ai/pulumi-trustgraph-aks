@@ -40,7 +40,7 @@ export const gpt4oMini = new cognitiveservices.Deployment(
             model: {
                 format: "OpenAI",
                 name: "gpt-4o-mini",
-                version: "2024-07-18", // Standard stable version for early 2026
+                version: "2024-07-18",
             },
             versionUpgradeOption: "OnceNewDefaultVersionAvailable",
         },
@@ -48,10 +48,7 @@ export const gpt4oMini = new cognitiveservices.Deployment(
     { provider: azureProvider, parent: aiHub }
 );
 
-/*
-
-// 4. Deployment: Mistral-Large-3
-export const mistralDeployment = new (cognitiveservices.Deployment as any)(
+export const mistralLarge3 = new cognitiveservices.Deployment(
     "mistral-large-deployment",
     {
         deploymentName: "mistral-large-3",
@@ -59,18 +56,21 @@ export const mistralDeployment = new (cognitiveservices.Deployment as any)(
         resourceGroupName: resourceGroup.name,
         sku: {
             name: "GlobalStandard", 
-            capacity: 1, // MaaS models often use 1 for 'Standard' tier
+            capacity: 10,
         },
         properties: {
             model: {
-                format: "Mistral AI", // Crucial for routing to Mistral
-                name: "mistral-large-2411", // Mistral Large 3's internal API name
+                format: "Mistral AI",
+                name: "Mistral-Large-2411",
                 version: "1",
             },
         },
     },
-    { provider: azureProvider, parent: aiHub, dependsOn: [gpt4oDeployment] }
+    {
+        provider: azureProvider,
+        parent: aiHub,
+    }
 );
 
-*/
+
 

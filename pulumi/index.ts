@@ -5,7 +5,7 @@ import { sshKey } from './ssh-key';
 //import * as application from './application';
 //import * as secrets from './secrets';
 import { accountSuffix } from './ai-project';
-import { gpt4oDeployment } from './ai-models';
+import * as models from './ai-models';
 
 sshKey.privateKeyOpenssh.apply(
     (key : string) => {
@@ -48,6 +48,6 @@ kubeconfig.apply(
 const save = [
 //    application,
     //    secrets,
-    gpt4oDeployment,
+    models,
 ];
 
