@@ -20,6 +20,8 @@ export const customDomain = randId.result.apply(
     id => prefix + "-" + id.replace("-", "")
 );
 
+accountSuffix.apply(console.log);
+
 // The Hub (The parent AI Services account)
 export const aiHub = new cognitiveservices.Account(
     "ai-account",
@@ -62,11 +64,25 @@ export const aiProject = new cognitiveservices.Project(
 );
 
 
-/*
 // Exports
 export const aiHubEndpoint = aiHub.properties.apply(p => p.endpoint);
+
 export const aiProjectApiUrl = aiProject.properties.apply(
     p => p.endpoints?.["AI Foundry API"]
 );
 
-*/
+aiHubEndpoint.apply(s => console.log("endpoint:", s));
+
+aiProjectApiUrl.apply(s => console.log("proj ep:", s));
+
+export const apiKeys = cognitiveservices.listAccountKeysOutput(
+    {
+        resourceGroupName: resourceGroup.name,
+        accountName: aiHub.name,
+    },
+    { provider: azureProvider }
+);
+
+export const apiKey1 = apiKeys.key1;
+export const apiKey2 = apiKeys.key2;
+

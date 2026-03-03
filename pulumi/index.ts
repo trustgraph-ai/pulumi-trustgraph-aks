@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { sshKey } from './ssh-key';
 //import * as application from './application';
 //import * as secrets from './secrets';
+import { aiHubEndpoint, aiProjectApiUrl } from './ai-project';
 import * as models from './ai-models';
 
 sshKey.privateKeyOpenssh.apply(
@@ -47,4 +48,6 @@ const save = [
     //    secrets,
     models,
 ];
+
+
 
