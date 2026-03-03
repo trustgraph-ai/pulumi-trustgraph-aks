@@ -11,7 +11,7 @@ export const gpt4o = new cognitiveservices.Deployment(
         accountName: aiHub.name,
         resourceGroupName: resourceGroup.name,
         sku: {
-            name: "GlobalStandard", // Best for GPT-4o in 2026
+            name: "Standard",
             capacity: 10, // Tokens-per-minute (TPM) in thousands
         },
         properties: {
@@ -26,7 +26,6 @@ export const gpt4o = new cognitiveservices.Deployment(
     { provider: azureProvider, parent: aiHub }
 );
 
-/*
 export const gpt4oMini = new cognitiveservices.Deployment(
     "gpt-4o-mini-deployment",
     {
@@ -34,7 +33,7 @@ export const gpt4oMini = new cognitiveservices.Deployment(
         accountName: aiHub.name,
         resourceGroupName: resourceGroup.name,
         sku: {
-            name: "GlobalStandard", // Best for GPT-4o in 2026
+            name: "Standard",
             capacity: 10, // Tokens-per-minute (TPM) in thousands
         },
         properties: {
@@ -48,7 +47,6 @@ export const gpt4oMini = new cognitiveservices.Deployment(
     },
     { provider: azureProvider, parent: aiHub }
 );
-*/
 
 /*
 

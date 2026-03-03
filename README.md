@@ -178,6 +178,13 @@ az quota create --resource-name "standardDsv5Family" \
     --limit-object value=20 --resource-type dedicated
 ```
 
+```
+az quota create --resource-name "gpt-4o" \
+  --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.CognitiveServices/locations/eastus" \
+  --limit-object value=50 \
+  --resource-type "GlobalStandard"
+```
+
 ## How the config was built
 
 The AI model specified in the config.json should match the model in the
