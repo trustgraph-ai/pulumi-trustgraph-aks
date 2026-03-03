@@ -77,7 +77,7 @@ export const mistralLarge = new cognitiveservices.Deployment(
 );
 
 export const mistralSmall = new cognitiveservices.Deployment(
-    "mistral-medium-deployment",
+    "mistral-small-deployment",
     {
         deploymentName: "mistral-small",
         accountName: aiHub.name,
