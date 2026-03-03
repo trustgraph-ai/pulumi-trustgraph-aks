@@ -79,9 +79,8 @@ export const mistralSmall = new cognitiveservices.Deployment(
         accountName: aiHub.name,
         resourceGroupName: resourceGroup.name,
         sku: {
-            // GlobalStandard is the default for Mistral's serverless MaaS
             name: "GlobalStandard", 
-            capacity: 10,
+            capacity: 1,
         },
         properties: {
             model: {
