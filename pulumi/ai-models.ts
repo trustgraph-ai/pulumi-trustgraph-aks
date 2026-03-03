@@ -56,13 +56,14 @@ export const mistralLarge3 = new cognitiveservices.Deployment(
         resourceGroupName: resourceGroup.name,
         sku: {
             name: "GlobalStandard", 
-            capacity: 10,
+            capacity: 1,
         },
         properties: {
             model: {
-                format: "Mistral AI",
-                name: "Mistral-Large-2411",
+                format: "AzureML", 
+                name: "azureml://registries/azureml-mistral/models/Mistral-Large-3/versions/1",
                 version: "1",
+                modelSource: "azureml://registries/azureml-mistral",
             },
         },
     },
