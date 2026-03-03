@@ -1,7 +1,6 @@
 
 import * as pulumi from "@pulumi/pulumi";
 import * as cognitiveservices from "@pulumi/azure-native/cognitiveservices";
-import * as resources from "@pulumi/azure-native/resources";
 import { location, prefix } from './config';
 import { azureProvider } from './azure-provider';
 import { resourceGroup } from './resource-group';
@@ -49,7 +48,6 @@ export const aiProject = new cognitiveservices.Project(
         accountName: aiHub.name,
         resourceGroupName: resourceGroup.name,
         location: location,
-//        kind: "AIServices",
         identity: { type: "SystemAssigned" },
         properties: {
             description: "TrustGraph AI project",
@@ -62,6 +60,7 @@ export const aiProject = new cognitiveservices.Project(
         dependsOn: [aiHub],
     }
 );
+
 
 /*
 // Exports
