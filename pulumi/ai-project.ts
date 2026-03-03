@@ -34,6 +34,7 @@ export const aiHub = new cognitiveservices.Account(
         properties: {
             customSubDomainName: customDomain,
             publicNetworkAccess: "Enabled",
+            allowProjectManagement: true, 
         },
     },
     { provider: azureProvider }
@@ -44,18 +45,14 @@ export const aiHub = new cognitiveservices.Account(
 export const aiProject = new cognitiveservices.Project(
     "ai-project",
     {
-        // Use the exact API version from your JSON
-        apiVersion: "2025-09-01",
-        type: "Microsoft.CognitiveServices/accounts/projects",
-
-        // Child resources in Azure use the ParentName/ChildName format
-        name: pulumi.interpolate`${aiHub.name}/${prefix}-project`,
+        projectName: `${prefix}-project`,
+        accountName: aiHub.name,
         resourceGroupName: resourceGroup.name,
         location: location,
-        kind: "AIServices", 
+//        kind: "AIServices",
         identity: { type: "SystemAssigned" },
         properties: {
-//            description: "TrustGraph AI project",
+            description: "TrustGraph AI project",
             displayName: "TrustGraph AI project",
         },
     },
