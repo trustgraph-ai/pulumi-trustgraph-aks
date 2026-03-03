@@ -3808,10 +3808,10 @@ items:
           resources:
             limits:
               cpu: '0.5'
-              memory: 256M
+              memory: 768M
             requests:
               cpu: '0.1'
-              memory: 256M
+              memory: 768M
           securityContext:
             runAsGroup: 0
             runAsUser: 0
