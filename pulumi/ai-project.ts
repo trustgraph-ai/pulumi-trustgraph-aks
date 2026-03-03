@@ -24,14 +24,13 @@ export const customDomain = randId.result.apply(
 export const aiHub = new cognitiveservices.Account(
     "ai-account",
     {
-        accountName: prefix,
+        accountName: accountSuffix.apply(s => prefix + "-" + s),
         resourceGroupName: resourceGroup.name,
         location: location,
         kind: "AIServices", 
         sku: { name: "S0" },
         identity: { type: "SystemAssigned" },
         properties: {
-            restore: true,
             customSubDomainName: customDomain,
             publicNetworkAccess: "Enabled",
             allowProjectManagement: true, 
