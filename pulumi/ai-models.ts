@@ -45,10 +45,10 @@ export const gpt4oMini = new cognitiveservices.Deployment(
             versionUpgradeOption: "OnceNewDefaultVersionAvailable",
         },
     },
-    { provider: azureProvider, parent: aiHub }
+    { provider: azureProvider, parent: aiHub, dependsOn: [gpt4o] }
 );
 
-export const mistralLarge3 = new cognitiveservices.Deployment(
+export const mistralLarge = new cognitiveservices.Deployment(
     "mistral-large-deployment",
     {
         deploymentName: "mistral-large-3",
@@ -69,6 +69,7 @@ export const mistralLarge3 = new cognitiveservices.Deployment(
     {
         provider: azureProvider,
         parent: aiHub,
+        dependsOn: [gpt4oMini] 
     }
 );
 
@@ -93,6 +94,7 @@ export const mistralSmall = new cognitiveservices.Deployment(
     {
         provider: azureProvider,
         parent: aiHub,
-        dependsOn: [aiHub],
+        dependsOn: [mistralLarge],
     }
 );
+
