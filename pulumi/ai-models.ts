@@ -18,7 +18,7 @@ export const gpt4o = new cognitiveservices.Deployment(
             model: {
                 format: "OpenAI",
                 name: "gpt-4o",
-                version: "2024-11-20", // Standard stable version for early 2026
+                version: "2024-11-20",
             },
             versionUpgradeOption: "OnceNewDefaultVersionAvailable",
         },
@@ -56,7 +56,7 @@ export const mistralLarge3 = new cognitiveservices.Deployment(
         resourceGroupName: resourceGroup.name,
         sku: {
             name: "GlobalStandard", 
-            capacity: 1,
+            capacity: 10, // Tokens-per-minute (TPM) in thousands
         },
         properties: {
             model: {
@@ -72,5 +72,28 @@ export const mistralLarge3 = new cognitiveservices.Deployment(
     }
 );
 
-
-
+export const mistralSmall = new cognitiveservices.Deployment(
+    "mistral-medium-deployment",
+    {
+        deploymentName: "mistral-small",
+        accountName: aiHub.name,
+        resourceGroupName: resourceGroup.name,
+        sku: {
+            // GlobalStandard is the default for Mistral's serverless MaaS
+            name: "GlobalStandard", 
+            capacity: 10,
+        },
+        properties: {
+            model: {
+                format: "Mistral AI", 
+                name: "mistral-small-2503", 
+                version: "1",
+            },
+        },
+    },
+    {
+        provider: azureProvider,
+        parent: aiHub,
+        dependsOn: [aiHub],
+    }
+);
