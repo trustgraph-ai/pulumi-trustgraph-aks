@@ -1,4 +1,4 @@
-
+/*
 import * as azure from "@pulumi/azure-native";
 import * as mls from "@pulumi/azure-native/machinelearningservices/v20241001";
 import * as cogsvcs from "@pulumi/azure-native/cognitiveservices/v20241001";
@@ -57,4 +57,6 @@ export const endpointToken = endpointKeys.apply(
         throw "No model key!";
     }
 );
+
+*/
 

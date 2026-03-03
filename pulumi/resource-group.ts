@@ -9,6 +9,7 @@ export const resourceGroup = new resources.ResourceGroup(
     "resource-group",
     {
         resourceGroupName: prefix,
+        location: "eastus",
     },
     { provider: azureProvider }
 );

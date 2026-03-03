@@ -1,4 +1,6 @@
 
+/*
+
 import * as cogsvcs from "@pulumi/azure-native/cognitiveservices/v20241001";
 import * as random from "@pulumi/random";
 
@@ -78,4 +80,6 @@ export const openaiToken = openaiKeys.apply(
         throw "No model key!";
     }
 );
+
+*/
 

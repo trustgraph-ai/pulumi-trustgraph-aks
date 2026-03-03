@@ -71,6 +71,13 @@ bucket, but for experimentation, you can just use local state:
 pulumi login --local
 ```
 
+If you want to encrypt secrets, you can set a passphrase.  If not, you
+can set the passphrase to the empty string to avoid the password prompts.
+
+```
+export PULUMI_CONFIG_PASSPHRASE=
+```
+
 Pulumi operates in stacks, each stack is a separate deployment.  The
 git repo contains the configuration for a single stack `azure`, so you
 could:
@@ -161,6 +168,16 @@ pulumi destroy
 
 Just say yes.
 
+## Useful commands
+
+Increase quota for CPUs...
+
+```
+az quota create --resource-name "standardDsv5Family" \
+    --scope /subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/ukwest \
+    --limit-object value=20 --resource-type dedicated
+```
+
 ## How the config was built
 
 The AI model specified in the config.json should match the model in the
@@ -174,6 +191,4 @@ pip install --no-cache --upgrade git+https://github.com/trustgraph-ai/trustgraph
 tg-configurator -i config-cs.json -t 1.8 -v 1.8.12 --platform aks-k8s -R > resources.yaml.cs
 tg-configurator -i config-mls.json -t 1.8 -v 1.8.12 --platform aks-k8s -R > resources.yaml.mls
 ```
-
-
 

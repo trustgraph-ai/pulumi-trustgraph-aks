@@ -1,9 +1,10 @@
 
 import * as fs from 'fs';
-import { kubeconfig } from './cluster';
+//import { kubeconfig } from './cluster';
 import { sshKey } from './ssh-key';
-import * as application from './application';
-import * as secrets from './secrets';
+//import * as application from './application';
+//import * as secrets from './secrets';
+import { accountSuffix } from './ai-project';
 
 sshKey.privateKeyOpenssh.apply(
     (key : string) => {
@@ -22,6 +23,9 @@ sshKey.privateKeyOpenssh.apply(
     }
 );
 
+accountSuffix.apply(console.log);
+
+/*
 kubeconfig.apply(
     (key : string) => {
         fs.writeFile(
@@ -38,9 +42,10 @@ kubeconfig.apply(
         );
     }
 );
+*/
 
 const save = [
-    application,
-    secrets,
+//    application,
+//    secrets,
 ];
 
