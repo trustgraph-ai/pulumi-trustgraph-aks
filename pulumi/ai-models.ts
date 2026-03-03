@@ -4,6 +4,9 @@ import { resourceGroup } from './resource-group';
 import { azureProvider } from './azure-provider';
 import { aiHub } from './ai-project';
 
+// We use dependsOn to make the deployments happen serially.  Azure
+// flips out if you try to deploy more than one at once
+
 export const gpt4o = new cognitiveservices.Deployment(
     "gpt-4o-deployment",
     {

@@ -4,8 +4,7 @@ import * as fs from 'fs';
 import { sshKey } from './ssh-key';
 //import * as application from './application';
 //import * as secrets from './secrets';
-import { accountSuffix } from './ai-project';
-import * as models from './ai-models';
+//import * as models from './ai-models';
 
 sshKey.privateKeyOpenssh.apply(
     (key : string) => {
@@ -23,8 +22,6 @@ sshKey.privateKeyOpenssh.apply(
         );
     }
 );
-
-accountSuffix.apply(console.log);
 
 /*
 kubeconfig.apply(
@@ -48,6 +45,6 @@ kubeconfig.apply(
 const save = [
 //    application,
     //    secrets,
-    models,
+//    models,
 ];
 
