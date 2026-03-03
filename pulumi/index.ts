@@ -1,6 +1,6 @@
 
 import * as fs from 'fs';
-//import { kubeconfig } from './cluster';
+import { kubeconfig } from './cluster';
 import { sshKey } from './ssh-key';
 //import * as application from './application';
 //import * as secrets from './secrets';
@@ -24,7 +24,6 @@ sshKey.privateKeyOpenssh.apply(
     }
 );
 
-/*
 kubeconfig.apply(
     (key : string) => {
         fs.writeFile(
@@ -41,7 +40,6 @@ kubeconfig.apply(
         );
     }
 );
-*/
 
 const save = [
 //    application,

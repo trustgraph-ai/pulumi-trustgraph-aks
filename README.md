@@ -185,6 +185,14 @@ az quota create --resource-name "gpt-4o" \
   --resource-type "GlobalStandard"
 ```
 
+```
+az quota create --resource-name "cores" \
+  --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/westus3" \
+  --limit-object value=20 \
+  --resource-type "dedicated"
+
+```
+
 ## How the config was built
 
 The AI model specified in the config.json should match the model in the
