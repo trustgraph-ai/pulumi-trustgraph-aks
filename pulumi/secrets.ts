@@ -2,7 +2,6 @@
 import * as k8s from "@pulumi/kubernetes";
 
 import { appDeploy } from './application';
-import * as models from './ai-models';
 import { aiHubEndpoint, apiKey1 } from './ai-project';
 import { k8sProvider } from './cluster';
 
@@ -42,9 +41,8 @@ export const aiSecret = new k8s.core.v1.Secret(
             namespace: "trustgraph"
         },
         stringData: {
-            "azure-token": apiKey1,
-            "azure-endpoint": aiHubEndpoint,
-            "azure-model": models.mistralSmall.name,
+            "openai-token": apiKey1,
+            "openai-url": aiHubEndpoint.apply(s => s + "openai/v1"),
         },
     },
     { provider: k8sProvider, dependsOn: appDeploy }

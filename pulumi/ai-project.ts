@@ -20,8 +20,6 @@ export const customDomain = randId.result.apply(
     id => prefix + "-" + id.replace("-", "")
 );
 
-accountSuffix.apply(console.log);
-
 // The Hub (The parent AI Services account)
 export const aiHub = new cognitiveservices.Account(
     "ai-account",

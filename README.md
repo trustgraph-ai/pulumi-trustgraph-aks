@@ -209,7 +209,6 @@ rm -rf env
 python3 -m venv env
 . env/bin/activate
 pip install --no-cache --upgrade git+https://github.com/trustgraph-ai/trustgraph-templates@master
-tg-configurator -i config-cs.json -t 1.8 -v 1.8.12 --platform aks-k8s -R > resources.yaml.cs
-tg-configurator -i config-mls.json -t 1.8 -v 1.8.12 --platform aks-k8s -R > resources.yaml.mls
+tg-configurator -i config.json -t 1.8 -v 1.8.20 --platform aks-k8s -R > resources.yaml
 ```
 
