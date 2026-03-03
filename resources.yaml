@@ -220,7 +220,7 @@ items:
           - --chunk-size
           - '2000'
           - --chunk-overlap
-          - '100'
+          - '50'
           - --log-level
           - INFO
           image: docker.io/trustgraph/trustgraph-flow:1.8.20
