@@ -199,6 +199,21 @@ az quota create --resource-name "standardDSv5Family" \
   --resource-type "dedicated"
 ```
 
+```
+az quota create --resource-name "standardDSv4Family" \
+  --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/westus3" \
+  --limit-object value=20 \
+  --resource-type "dedicated"
+```
+
+```
+  az quota create \
+    --resource-name "StandardDadsv7Family" \
+    --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/uksouth" \
+    --limit-object value=32 \
+    --resource-type "dedicated"
+```
+
 ## How the config was built
 
 The AI model specified in the config.json should match the model in the

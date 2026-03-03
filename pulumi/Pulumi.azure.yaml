@@ -1,6 +1,6 @@
 encryptionsalt: v1:g8313Sm+On4=:v1:PER3OQoZ+6v80A1y:KznBMcZ+/elfjqWIJic6zwLcdmFwBw==
 config:
-  trustgraph-azure:location: westus3
+  trustgraph-azure:location: ukwest
   trustgraph-azure:environment: dev
   trustgraph-azure:node-size: "Standard_D8s_v5"
   trustgraph-azure:node-count: 2

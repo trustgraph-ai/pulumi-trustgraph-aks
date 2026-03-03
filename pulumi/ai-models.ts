@@ -29,6 +29,8 @@ export const gpt4o = new cognitiveservices.Deployment(
     { provider: azureProvider, parent: aiHub }
 );
 
+/*
+
 export const gpt4oMini = new cognitiveservices.Deployment(
     "gpt-4o-mini-deployment",
     {
@@ -50,6 +52,7 @@ export const gpt4oMini = new cognitiveservices.Deployment(
     },
     { provider: azureProvider, parent: aiHub, dependsOn: [gpt4o] }
 );
+*/
 
 export const mistralLarge = new cognitiveservices.Deployment(
     "mistral-large-deployment",
@@ -72,7 +75,7 @@ export const mistralLarge = new cognitiveservices.Deployment(
     {
         provider: azureProvider,
         parent: aiHub,
-        dependsOn: [gpt4oMini] 
+        dependsOn: [gpt4o] 
     }
 );
 
