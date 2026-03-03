@@ -60,10 +60,9 @@ export const mistralLarge3 = new cognitiveservices.Deployment(
         },
         properties: {
             model: {
-                format: "AzureML", 
-                name: "azureml://registries/azureml-mistral/models/Mistral-Large-3/versions/1",
+                format: "Mistral AI", 
+                name: "Mistral-Large-3",
                 version: "1",
-                modelSource: "azureml://registries/azureml-mistral",
             },
         },
     },
