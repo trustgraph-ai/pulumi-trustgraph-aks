@@ -1,0 +1,61 @@
+[
+    {
+        "name": "triple-store-cassandra",
+        "parameters": {}
+    },
+    {
+        "name": "row-store-cassandra",
+        "parameters": {}
+    },
+    {
+        "name": "vector-store-qdrant",
+        "parameters": {}
+    },
+    {
+        "name": "pulsar",
+        "parameters": {}
+    },
+    {
+        "name": "grafana",
+        "parameters": {}
+    },
+    {
+        "name": "trustgraph-base",
+        "parameters": {}
+    },
+    {
+        "name": "embeddings-fastembed",
+        "parameters": {
+        }
+    },
+    {
+        "name": "openai",
+        "parameters": {
+            "max-output-tokens": 4096,
+	    "models": {
+		"type": "string",
+		"description": "LLM model to use",
+		"default": "mistral-large-3",
+		"enum": [
+		    {
+			id: "mistral-large-3",
+			description: "Mistral Large 3"
+		    },
+		    {
+			id: "mistral-small",
+			description: "Mistral Small 2503"
+		    },
+		    {
+			id: "gpt-4o",
+			description: "ChatGPT 4o"
+		    },
+		    {
+			id: "gpt-4o-mini",
+			description: "ChatGPT 4o mini"
+		    },
+		],
+		"required": true
+	    }
+        }
+    }
+]
