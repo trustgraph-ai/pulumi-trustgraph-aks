@@ -31,6 +31,7 @@ export const aiHub = new cognitiveservices.Account(
         sku: { name: "S0" },
         identity: { type: "SystemAssigned" },
         properties: {
+            restore: true,
             customSubDomainName: customDomain,
             publicNetworkAccess: "Enabled",
             allowProjectManagement: true, 
