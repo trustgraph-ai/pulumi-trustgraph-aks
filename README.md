@@ -190,7 +190,13 @@ az quota create --resource-name "cores" \
   --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/westus3" \
   --limit-object value=20 \
   --resource-type "dedicated"
+```
 
+```
+az quota create --resource-name "standardDSv5Family" \
+  --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/westus3" \
+  --limit-object value=20 \
+  --resource-type "dedicated"
 ```
 
 ## How the config was built
