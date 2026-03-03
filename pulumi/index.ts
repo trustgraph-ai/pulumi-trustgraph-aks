@@ -45,6 +45,6 @@ kubeconfig.apply(
 const save = [
 //    application,
     //    secrets,
-//    models,
+    models,
 ];
 
