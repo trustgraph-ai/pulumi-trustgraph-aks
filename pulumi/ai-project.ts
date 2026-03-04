@@ -69,13 +69,4 @@ export const aiProjectApiUrl = aiProject.properties.apply(
     p => p.endpoints?.["AI Foundry API"]
 );
 
-export const apiKeys = cognitiveservices.listAccountKeysOutput(
-    {
-        resourceGroupName: resourceGroup.name,
-        accountName: aiHub.name,
-    },
-    { provider: azureProvider }
-);
 
-export const apiKey1 = apiKeys.apply(keys => keys?.key1 ?? "");
-export const apiKey2 = apiKeys.apply(keys => keys?.key2 ?? "");

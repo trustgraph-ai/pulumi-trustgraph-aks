@@ -2,7 +2,7 @@
 import * as k8s from "@pulumi/kubernetes";
 
 import { appDeploy } from './application';
-import { aiHubEndpoint, apiKey1 } from './ai-project';
+import { aiHubEndpoint, apiKey1 } from './ai-keys';
 import { k8sProvider } from './cluster';
 
 export const gatewaySecret = new k8s.core.v1.Secret(
