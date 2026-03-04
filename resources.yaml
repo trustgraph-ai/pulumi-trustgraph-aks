@@ -105,10 +105,10 @@ items:
           resources:
             limits:
               cpu: '0.5'
-              memory: 512M
+              memory: 768M
             requests:
               cpu: '0.1'
-              memory: 512M
+              memory: 768M
           securityContext:
             runAsGroup: 0
             runAsUser: 0
@@ -160,7 +160,7 @@ items:
         containers:
         - env:
           - name: JVM_OPTS
-            value: -Xms300M -Xmx300M -Dcassandra.skip_wait_for_gossip_to_settle=0
+            value: -Xms500M -Xmx500M -Dcassandra.skip_wait_for_gossip_to_settle=0
           image: docker.io/cassandra:4.1.10
           name: cassandra
           ports:
@@ -169,10 +169,10 @@ items:
           resources:
             limits:
               cpu: '1.0'
-              memory: 1000M
+              memory: 2000M
             requests:
               cpu: '0.5'
-              memory: 1000M
+              memory: 2000M
           securityContext:
             runAsGroup: 0
             runAsUser: 0
@@ -3808,10 +3808,10 @@ items:
           resources:
             limits:
               cpu: '0.5'
-              memory: 768M
+              memory: 1024M
             requests:
               cpu: '0.1'
-              memory: 768M
+              memory: 1024M
           securityContext:
             runAsGroup: 0
             runAsUser: 0
@@ -4612,7 +4612,7 @@ items:
           - bin/apply-config-from-env.py conf/bookkeeper.conf && exec bin/pulsar bookie
           env:
           - name: BOOKIE_MEM
-            value: -Xms256m -Xmx256m -XX:MaxDirectMemorySize=256m
+            value: -Xms512m -Xmx512m -XX:MaxDirectMemorySize=512m
           - name: advertisedAddress
             value: bookie
           - name: bookieId
@@ -4631,10 +4631,10 @@ items:
           resources:
             limits:
               cpu: '1'
-              memory: 1024M
+              memory: 2048M
             requests:
               cpu: '0.1'
-              memory: 1024M
+              memory: 2048M
           securityContext:
             runAsGroup: 0
             runAsUser: 0
@@ -4669,7 +4669,7 @@ items:
           - bin/apply-config-from-env.py conf/broker.conf && exec bin/pulsar broker
           env:
           - name: PULSAR_MEM
-            value: -Xms384m -Xmx384m -XX:MaxDirectMemorySize=384m
+            value: -Xms512m -Xmx512m -XX:MaxDirectMemorySize=512m
           - name: advertisedAddress
             value: pulsar
           - name: advertisedListeners
@@ -4696,10 +4696,10 @@ items:
           resources:
             limits:
               cpu: '1'
-              memory: 800M
+              memory: 1500M
             requests:
               cpu: '0.1'
-              memory: 800M
+              memory: 1500M
           securityContext:
             runAsGroup: 0
             runAsUser: 0
@@ -5053,10 +5053,10 @@ items:
           resources:
             limits:
               cpu: '0.5'
-              memory: 128M
+              memory: 256M
             requests:
               cpu: '0.1'
-              memory: 128M
+              memory: 256M
           securityContext:
             runAsGroup: 0
             runAsUser: 0

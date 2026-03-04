@@ -222,6 +222,10 @@ az quota update --resource-name "standardDv5Family" --scope "/subscriptions/$(az
 az quota update --resource-name "standardDSv5Family" --scope "/subscriptions/$(az account show --query id -o  tsv)/providers/Microsoft.Compute/locations/swedencentral" --limit-object value=20
 ```
 
+```
+az quota update --resource-name "standardDadsv7Family" --scope "/subscriptions/$(az account show --query id -o  tsv)/providers/Microsoft.Compute/locations/uksouth" --limit-object value=20
+```
+
 ## How the config was built
 
 The AI model specified in the config.json should match the model in the
