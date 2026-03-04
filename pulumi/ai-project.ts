@@ -69,4 +69,3 @@ export const aiProjectApiUrl = aiProject.properties.apply(
     p => p.endpoints?.["AI Foundry API"]
 );
 
-
