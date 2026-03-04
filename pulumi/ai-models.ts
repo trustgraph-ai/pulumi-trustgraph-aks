@@ -2,7 +2,7 @@
 import * as cognitiveservices from "@pulumi/azure-native/cognitiveservices";
 import { resourceGroup } from './resource-group';
 import { azureProvider } from './azure-provider';
-import { aiHub } from './ai-project';
+import { aiHub, aiProject } from './ai-project';
 
 // We use dependsOn to make the deployments happen serially.  Azure
 // flips out if you try to deploy more than one at once
@@ -26,7 +26,7 @@ export const gpt4o = new cognitiveservices.Deployment(
             versionUpgradeOption: "OnceNewDefaultVersionAvailable",
         },
     },
-    { provider: azureProvider, parent: aiHub }
+    { provider: azureProvider, parent: aiHub, dependsOn: [aiProject] }
 );
 
 export const gpt4oMini = new cognitiveservices.Deployment(
