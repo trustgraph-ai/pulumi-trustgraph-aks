@@ -27,10 +27,10 @@ export const vmSize = cfg.require("node-size");
 export const vmCount = Number(cfg.require("node-count"));
 
 // AI stuff
-export const aiEndpointModel = cfg.require("ai-endpoint-model");
+//export const aiEndpointModel = cfg.require("ai-endpoint-model");
 
-export const aiOpenaiModel = cfg.require("ai-openai-model");
-export const aiOpenaiVersion = cfg.require("ai-openai-version");
-export const aiOpenaiFormat = cfg.require("ai-openai-format");
-export const aiOpenaiRaiPolicy = cfg.require("ai-openai-rai-policy");
+//export const aiOpenaiModel = cfg.require("ai-openai-model");
+//export const aiOpenaiVersion = cfg.require("ai-openai-version");
+//export const aiOpenaiFormat = cfg.require("ai-openai-format");
+//export const aiOpenaiRaiPolicy = cfg.require("ai-openai-rai-policy");
 

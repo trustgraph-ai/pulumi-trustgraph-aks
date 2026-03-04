@@ -71,6 +71,13 @@ bucket, but for experimentation, you can just use local state:
 pulumi login --local
 ```
 
+If you want to encrypt secrets, you can set a passphrase.  If not, you
+can set the passphrase to the empty string to avoid the password prompts.
+
+```
+export PULUMI_CONFIG_PASSPHRASE=
+```
+
 Pulumi operates in stacks, each stack is a separate deployment.  The
 git repo contains the configuration for a single stack `azure`, so you
 could:
@@ -161,6 +168,64 @@ pulumi destroy
 
 Just say yes.
 
+## Useful commands
+
+Increase quota for CPUs...
+
+```
+az quota create --resource-name "standardDsv5Family" \
+    --scope /subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/ukwest \
+    --limit-object value=20 --resource-type dedicated
+```
+
+```
+az quota create --resource-name "gpt-4o" \
+  --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.CognitiveServices/locations/eastus" \
+  --limit-object value=50 \
+  --resource-type "GlobalStandard"
+```
+
+```
+az quota create --resource-name "cores" \
+  --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/westus3" \
+  --limit-object value=20 \
+  --resource-type "dedicated"
+```
+
+```
+az quota create --resource-name "standardDSv5Family" \
+  --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/westus3" \
+  --limit-object value=20 \
+  --resource-type "dedicated"
+```
+
+```
+az quota create --resource-name "standardDSv4Family" \
+  --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/westus3" \
+  --limit-object value=20 \
+  --resource-type "dedicated"
+```
+
+```
+  az quota create \
+    --resource-name "StandardDadsv7Family" \
+    --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/uksouth" \
+    --limit-object value=32 \
+    --resource-type "dedicated"
+```
+
+```
+az quota update --resource-name "standardDv5Family" --scope "/subscriptions/$(az account show --query id -o  tsv)/providers/Microsoft.Compute/locations/swedencentral" --limit-object value=20
+```
+
+```
+az quota update --resource-name "standardDSv5Family" --scope "/subscriptions/$(az account show --query id -o  tsv)/providers/Microsoft.Compute/locations/swedencentral" --limit-object value=20
+```
+
+```
+az quota update --resource-name "standardDadsv7Family" --scope "/subscriptions/$(az account show --query id -o  tsv)/providers/Microsoft.Compute/locations/uksouth" --limit-object value=20
+```
+
 ## How the config was built
 
 The AI model specified in the config.json should match the model in the
@@ -171,9 +236,6 @@ rm -rf env
 python3 -m venv env
 . env/bin/activate
 pip install --no-cache --upgrade git+https://github.com/trustgraph-ai/trustgraph-templates@master
-tg-configurator -i config-cs.json -t 1.8 -v 1.8.12 --platform aks-k8s -R > resources.yaml.cs
-tg-configurator -i config-mls.json -t 1.8 -v 1.8.12 --platform aks-k8s -R > resources.yaml.mls
+tg-configurator -i config.json -t 1.8 -v 1.8.20 --platform aks-k8s -R > resources.yaml
 ```
-
-
 

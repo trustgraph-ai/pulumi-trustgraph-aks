@@ -1,11 +1,6 @@
 encryptionsalt: v1:g8313Sm+On4=:v1:PER3OQoZ+6v80A1y:KznBMcZ+/elfjqWIJic6zwLcdmFwBw==
 config:
-  trustgraph-azure:location: westus3
+  trustgraph-azure:location: swedencentral
   trustgraph-azure:environment: dev
-  trustgraph-azure:node-size: "Standard_A4_v2"
-  trustgraph-azure:node-count: 3
-  trustgraph-azure:ai-endpoint-model: azureml://registries/azureml/models/Phi-4
-  trustgraph-azure:ai-openai-model: gpt-4o-mini
-  trustgraph-azure:ai-openai-version: "2024-07-18"
-  trustgraph-azure:ai-openai-format: OpenAI
-  trustgraph-azure:ai-openai-rai-policy: Microsoft.DefaultV2
+  trustgraph-azure:node-size: "Standard_D8s_v5"
+  trustgraph-azure:node-count: 2

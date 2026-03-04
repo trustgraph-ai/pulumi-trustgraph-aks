@@ -4,7 +4,7 @@
         "parameters": {}
     },
     {
-        "name": "object-store-cassandra",
+        "name": "row-store-cassandra",
         "parameters": {}
     },
     {
@@ -24,30 +24,34 @@
         "parameters": {}
     },
     {
-        "name": "override-recursive-chunker",
-        "parameters": {
-            "chunk-size": 2000,
-            "chunk-overlap": 100
-        }
-    },
-    {
         "name": "embeddings-fastembed",
         "parameters": {
-            "embeddings-model": "sentence-transformers/all-MiniLM-L6-v2"
         }
     },
     {
-        "name": "azure-openai",
+        "name": "openai",
         "parameters": {
             "max-output-tokens": 4096,
 	    "models": {
 		"type": "string",
 		"description": "LLM model to use",
-		"default": "azure",
+		"default": "mistral-large-3",
 		"enum": [
 		    {
-			id: "azure",
-			description: "Azure"
+			id: "mistral-large-3",
+			description: "Mistral Large 3"
+		    },
+		    {
+			id: "mistral-small",
+			description: "Mistral Small 2503"
+		    },
+		    {
+			id: "gpt-4o",
+			description: "ChatGPT 4o"
+		    },
+		    {
+			id: "gpt-4o-mini",
+			description: "ChatGPT 4o mini"
 		    },
 		],
 		"required": true

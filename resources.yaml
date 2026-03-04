@@ -37,8 +37,8 @@ items:
           - -p
           - pulsar://pulsar:6650
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: agent-manager
           resources:
             limits:
@@ -90,14 +90,14 @@ items:
           - --port
           - '8088'
           - --log-level
-          - DEBUG
+          - INFO
           env:
           - name: GATEWAY_SECRET
             valueFrom:
               secretKeyRef:
                 key: gateway-secret
                 name: gateway-secret
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: api-gateway
           ports:
           - containerPort: 8088
@@ -105,10 +105,10 @@ items:
           resources:
             limits:
               cpu: '0.5'
-              memory: 512M
+              memory: 768M
             requests:
               cpu: '0.1'
-              memory: 512M
+              memory: 768M
           securityContext:
             runAsGroup: 0
             runAsUser: 0
@@ -160,7 +160,7 @@ items:
         containers:
         - env:
           - name: JVM_OPTS
-            value: -Xms300M -Xmx300M -Dcassandra.skip_wait_for_gossip_to_settle=0
+            value: -Xms500M -Xmx500M -Dcassandra.skip_wait_for_gossip_to_settle=0
           image: docker.io/cassandra:4.1.10
           name: cassandra
           ports:
@@ -169,10 +169,10 @@ items:
           resources:
             limits:
               cpu: '1.0'
-              memory: 1000M
+              memory: 2000M
             requests:
               cpu: '0.5'
-              memory: 1000M
+              memory: 2000M
           securityContext:
             runAsGroup: 0
             runAsUser: 0
@@ -220,10 +220,10 @@ items:
           - --chunk-size
           - '2000'
           - --chunk-overlap
-          - '100'
+          - '50'
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: chunker
           resources:
             limits:
@@ -271,8 +271,8 @@ items:
           - -p
           - pulsar://pulsar:6650
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: config-svc
           resources:
             limits:
@@ -366,8 +366,8 @@ items:
           - -p
           - pulsar://pulsar:6650
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: document-embeddings
           resources:
             limits:
@@ -417,8 +417,8 @@ items:
           - --doc-limit
           - '20'
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: document-rag
           resources:
             limits:
@@ -468,8 +468,8 @@ items:
           - --concurrency
           - '1'
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: embeddings
           resources:
             limits:
@@ -1495,8 +1495,8 @@ items:
           - -p
           - pulsar://pulsar:6650
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: graph-embeddings
           resources:
             limits:
@@ -1543,6 +1543,8 @@ items:
           - graph-rag
           - -p
           - pulsar://pulsar:6650
+          - --concurrency
+          - '1'
           - --entity-limit
           - '50'
           - --triple-limit
@@ -1552,8 +1554,8 @@ items:
           - --max-path-length
           - '2'
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: graph-rag
           resources:
             limits:
@@ -1580,18 +1582,136 @@ items:
       app: graph-rag
 - apiVersion: v1
   data:
-    config.json: '{"collection": {"trustgraph:default": {"collection": "default",
-      "description": "Default collection", "name": "Default Collection", "tags": ["default"],
-      "user": "default-user"}}, "flow-classes": {"document-rag": {"class": {}, "description":
-      "DocumentRAG only", "flow": {"chunker:{id}": {"chunk-overlap": "{chunk-overlap}",
-      "chunk-size": "{chunk-size}", "input": "persistent://tg/flow/text-document-load:{id}",
-      "output": "persistent://tg/flow/chunk-load:{id}"}, "de-query:{id}": {"request":
-      "non-persistent://tg/request/document-embeddings:{id}", "response": "non-persistent://tg/response/document-embeddings:{id}"},
-      "de-write:{id}": {"input": "persistent://tg/flow/document-embeddings-store:{id}"},
-      "document-embeddings:{id}": {"embeddings-request": "non-persistent://tg/request/embeddings:{id}",
-      "embeddings-response": "non-persistent://tg/response/embeddings:{id}", "input":
-      "persistent://tg/flow/chunk-load:{id}", "output": "persistent://tg/flow/document-embeddings-store:{id}"},
-      "document-rag:{id}": {"document-embeddings-request": "non-persistent://tg/request/document-embeddings:{id}",
+    config.json: '{"active-flow": {"agent-manager": {"default": {"graph-rag-request":
+      "non-persistent://tg/request/graph-rag:default", "graph-rag-response": "non-persistent://tg/response/graph-rag:default",
+      "mcp-tool-request": "non-persistent://tg/request/mcp-tool:default", "mcp-tool-response":
+      "non-persistent://tg/response/mcp-tool:default", "next": "non-persistent://tg/request/agent:default",
+      "prompt-request": "non-persistent://tg/request/prompt:default", "prompt-response":
+      "non-persistent://tg/response/prompt:default", "request": "non-persistent://tg/request/agent:default",
+      "response": "non-persistent://tg/response/agent:default", "structured-query-request":
+      "non-persistent://tg/request/structured-query:default", "structured-query-response":
+      "non-persistent://tg/response/structured-query:default", "text-completion-request":
+      "non-persistent://tg/request/text-completion:default", "text-completion-response":
+      "non-persistent://tg/response/text-completion:default"}}, "chunker": {"default":
+      {"chunk-overlap": "50", "chunk-size": "2000", "input": "persistent://tg/flow/text-document-load:default",
+      "output": "persistent://tg/flow/chunk-load:default"}}, "de-query": {"default":
+      {"request": "non-persistent://tg/request/document-embeddings:default", "response":
+      "non-persistent://tg/response/document-embeddings:default"}}, "de-write": {"default":
+      {"input": "persistent://tg/flow/document-embeddings-store:default"}}, "document-embeddings":
+      {"default": {"embeddings-request": "non-persistent://tg/request/embeddings:default",
+      "embeddings-response": "non-persistent://tg/response/embeddings:default", "input":
+      "persistent://tg/flow/chunk-load:default", "output": "persistent://tg/flow/document-embeddings-store:default"}},
+      "document-rag": {"default": {"document-embeddings-request": "non-persistent://tg/request/document-embeddings:default",
+      "document-embeddings-response": "non-persistent://tg/response/document-embeddings:default",
+      "embeddings-request": "non-persistent://tg/request/embeddings:default", "embeddings-response":
+      "non-persistent://tg/response/embeddings:default", "prompt-request": "non-persistent://tg/request/prompt-rag:default",
+      "prompt-response": "non-persistent://tg/response/prompt-rag:default", "request":
+      "non-persistent://tg/request/document-rag:default", "response": "non-persistent://tg/response/document-rag:default"}},
+      "embeddings": {"default": {"model": "sentence-transformers/all-MiniLM-L6-v2",
+      "request": "non-persistent://tg/request/embeddings:default", "response": "non-persistent://tg/response/embeddings:default"}},
+      "ge-query": {"default": {"request": "non-persistent://tg/request/graph-embeddings:default",
+      "response": "non-persistent://tg/response/graph-embeddings:default"}}, "ge-write":
+      {"default": {"input": "persistent://tg/flow/graph-embeddings-store:default"}},
+      "graph-embeddings": {"default": {"embeddings-request": "non-persistent://tg/request/embeddings:default",
+      "embeddings-response": "non-persistent://tg/response/embeddings:default", "input":
+      "persistent://tg/flow/entity-contexts-load:default", "output": "persistent://tg/flow/graph-embeddings-store:default"}},
+      "graph-rag": {"default": {"embeddings-request": "non-persistent://tg/request/embeddings:default",
+      "embeddings-response": "non-persistent://tg/response/embeddings:default", "graph-embeddings-request":
+      "non-persistent://tg/request/graph-embeddings:default", "graph-embeddings-response":
+      "non-persistent://tg/response/graph-embeddings:default", "prompt-request": "non-persistent://tg/request/prompt-rag:default",
+      "prompt-response": "non-persistent://tg/response/prompt-rag:default", "request":
+      "non-persistent://tg/request/graph-rag:default", "response": "non-persistent://tg/response/graph-rag:default",
+      "triples-request": "non-persistent://tg/request/triples:default", "triples-response":
+      "non-persistent://tg/response/triples:default"}}, "kg-extract-definitions":
+      {"default": {"entity-contexts": "persistent://tg/flow/entity-contexts-load:default",
+      "input": "persistent://tg/flow/chunk-load:default", "prompt-request": "non-persistent://tg/request/prompt:default",
+      "prompt-response": "non-persistent://tg/response/prompt:default", "triples":
+      "persistent://tg/flow/triples-store:default"}}, "kg-extract-objects": {"default":
+      {"entity-contexts": "persistent://tg/flow/entity-contexts-load:default", "input":
+      "persistent://tg/flow/chunk-load:default", "output": "persistent://tg/flow/objects-store:default",
+      "prompt-request": "non-persistent://tg/request/prompt:default", "prompt-response":
+      "non-persistent://tg/response/prompt:default"}}, "kg-extract-relationships":
+      {"default": {"input": "persistent://tg/flow/chunk-load:default", "prompt-request":
+      "non-persistent://tg/request/prompt:default", "prompt-response": "non-persistent://tg/response/prompt:default",
+      "triples": "persistent://tg/flow/triples-store:default"}}, "mcp-tool": {"default":
+      {"request": "non-persistent://tg/request/mcp-tool:default", "response": "non-persistent://tg/response/mcp-tool:default",
+      "text-completion-request": "non-persistent://tg/request/text-completion:default",
+      "text-completion-response": "non-persistent://tg/response/text-completion:default"}},
+      "metering": {"default": {"input": "non-persistent://tg/response/text-completion:default"}},
+      "metering-rag": {"default": {"input": "non-persistent://tg/response/text-completion-rag:default"}},
+      "nlp-query": {"default": {"prompt-request": "non-persistent://tg/request/prompt-rag:default",
+      "prompt-response": "non-persistent://tg/response/prompt-rag:default", "request":
+      "non-persistent://tg/request/nlp-query:default", "response": "non-persistent://tg/response/nlp-query:default"}},
+      "objects-query": {"default": {"request": "non-persistent://tg/request/objects:default",
+      "response": "non-persistent://tg/response/objects:default"}}, "objects-write":
+      {"default": {"input": "persistent://tg/flow/objects-store:default"}}, "pdf-decoder":
+      {"default": {"input": "persistent://tg/flow/document-load:default", "output":
+      "persistent://tg/flow/text-document-load:default"}}, "prompt": {"default": {"request":
+      "non-persistent://tg/request/prompt:default", "response": "non-persistent://tg/response/prompt:default",
+      "text-completion-request": "non-persistent://tg/request/text-completion:default",
+      "text-completion-response": "non-persistent://tg/response/text-completion:default"}},
+      "prompt-rag": {"default": {"request": "non-persistent://tg/request/prompt-rag:default",
+      "response": "non-persistent://tg/response/prompt-rag:default", "text-completion-request":
+      "non-persistent://tg/request/text-completion-rag:default", "text-completion-response":
+      "non-persistent://tg/response/text-completion-rag:default"}}, "structured-diag":
+      {"default": {"prompt-request": "non-persistent://tg/request/prompt:default",
+      "prompt-response": "non-persistent://tg/response/prompt:default", "request":
+      "non-persistent://tg/request/structured-diag:default", "response": "non-persistent://tg/response/structured-diag:default"}},
+      "structured-query": {"default": {"nlp-query-request": "non-persistent://tg/request/nlp-query:default",
+      "nlp-query-response": "non-persistent://tg/response/nlp-query:default", "objects-query-request":
+      "non-persistent://tg/request/objects:default", "objects-query-response": "non-persistent://tg/response/objects:default",
+      "request": "non-persistent://tg/request/structured-query:default", "response":
+      "non-persistent://tg/response/structured-query:default"}}, "text-completion":
+      {"default": {"model": "mistral-large-3", "request": "non-persistent://tg/request/text-completion:default",
+      "response": "non-persistent://tg/response/text-completion:default"}}, "text-completion-rag":
+      {"default": {"model": "mistral-large-3", "request": "non-persistent://tg/request/text-completion-rag:default",
+      "response": "non-persistent://tg/response/text-completion-rag:default"}}, "triples-query":
+      {"default": {"request": "non-persistent://tg/request/triples:default", "response":
+      "non-persistent://tg/response/triples:default"}}, "triples-write": {"default":
+      {"input": "persistent://tg/flow/triples-store:default"}}}, "collection": {"trustgraph:default":
+      {"collection": "default", "description": "Default collection", "name": "Default
+      Collection", "tags": ["default"], "user": "default-user"}}, "flow": {"default":
+      {"blueprint-name": "everything", "description": "Default processing flow", "interfaces":
+      {"agent": {"request": "non-persistent://tg/request/agent:default", "response":
+      "non-persistent://tg/response/agent:default"}, "document-embeddings": {"request":
+      "non-persistent://tg/request/document-embeddings:default", "response": "non-persistent://tg/response/document-embeddings:default"},
+      "document-embeddings-store": "persistent://tg/flow/document-embeddings-store:default",
+      "document-load": "persistent://tg/flow/document-load:default", "document-rag":
+      {"request": "non-persistent://tg/request/document-rag:default", "response":
+      "non-persistent://tg/response/document-rag:default"}, "embeddings": {"request":
+      "non-persistent://tg/request/embeddings:default", "response": "non-persistent://tg/response/embeddings:default"},
+      "entity-contexts-load": "persistent://tg/flow/entity-contexts-load:default",
+      "graph-embeddings": {"request": "non-persistent://tg/request/graph-embeddings:default",
+      "response": "non-persistent://tg/response/graph-embeddings:default"}, "graph-embeddings-store":
+      "persistent://tg/flow/graph-embeddings-store:default", "graph-rag": {"request":
+      "non-persistent://tg/request/graph-rag:default", "response": "non-persistent://tg/response/graph-rag:default"},
+      "mcp-tool": {"request": "non-persistent://tg/request/mcp-tool:default", "response":
+      "non-persistent://tg/response/mcp-tool:default"}, "nlp-query": {"request": "non-persistent://tg/request/nlp-query:default",
+      "response": "non-persistent://tg/response/nlp-query:default"}, "objects": {"request":
+      "non-persistent://tg/request/objects:default", "response": "non-persistent://tg/response/objects:default"},
+      "objects-store": "persistent://tg/flow/objects-store:default", "prompt": {"request":
+      "non-persistent://tg/request/prompt:default", "response": "non-persistent://tg/response/prompt:default"},
+      "structured-diag": {"request": "non-persistent://tg/request/structured-diag:default",
+      "response": "non-persistent://tg/response/structured-diag:default"}, "structured-query":
+      {"request": "non-persistent://tg/request/structured-query:default", "response":
+      "non-persistent://tg/response/structured-query:default"}, "text-completion":
+      {"request": "non-persistent://tg/request/text-completion:default", "response":
+      "non-persistent://tg/response/text-completion:default"}, "text-load": "persistent://tg/flow/text-document-load:default",
+      "triples": {"request": "non-persistent://tg/request/triples:default", "response":
+      "non-persistent://tg/response/triples:default"}, "triples-store": "persistent://tg/flow/triples-store:default"},
+      "parameters": {"chunk-overlap": "50", "chunk-size": "2000", "embeddings-model":
+      "sentence-transformers/all-MiniLM-L6-v2", "llm-model": "mistral-large-3", "llm-rag-model":
+      "mistral-large-3", "llm-rag-temperature": "0.300", "llm-temperature": "0.300"}}},
+      "flow-blueprint": {"document-rag": {"blueprint": {}, "description": "DocumentRAG
+      only", "flow": {"chunker:{id}": {"chunk-overlap": "{chunk-overlap}", "chunk-size":
+      "{chunk-size}", "input": "persistent://tg/flow/text-document-load:{id}", "output":
+      "persistent://tg/flow/chunk-load:{id}"}, "de-query:{id}": {"request": "non-persistent://tg/request/document-embeddings:{id}",
+      "response": "non-persistent://tg/response/document-embeddings:{id}"}, "de-write:{id}":
+      {"input": "persistent://tg/flow/document-embeddings-store:{id}"}, "document-embeddings:{id}":
+      {"embeddings-request": "non-persistent://tg/request/embeddings:{id}", "embeddings-response":
+      "non-persistent://tg/response/embeddings:{id}", "input": "persistent://tg/flow/chunk-load:{id}",
+      "output": "persistent://tg/flow/document-embeddings-store:{id}"}, "document-rag:{id}":
+      {"document-embeddings-request": "non-persistent://tg/request/document-embeddings:{id}",
       "document-embeddings-response": "non-persistent://tg/response/document-embeddings:{id}",
       "embeddings-request": "non-persistent://tg/request/embeddings:{id}", "embeddings-response":
       "non-persistent://tg/response/embeddings:{id}", "prompt-request": "non-persistent://tg/request/prompt-rag:{id}",
@@ -1637,8 +1757,8 @@ items:
       {"advanced": true, "description": "LLM temperature for RAG", "order": 4, "type":
       "llm-temperature"}, "llm-temperature": {"advanced": true, "description": "LLM
       temperature", "order": 3, "type": "llm-temperature"}}, "tags": ["document-rag"]},
-      "document-rag+graph-rag": {"class": {}, "description": "Supports GraphRAG and
-      document RAG, no core creation", "flow": {"agent-manager:{id}": {"graph-rag-request":
+      "document-rag+graph-rag": {"blueprint": {}, "description": "Supports GraphRAG
+      and document RAG, no core creation", "flow": {"agent-manager:{id}": {"graph-rag-request":
       "non-persistent://tg/request/graph-rag:{id}", "graph-rag-response": "non-persistent://tg/response/graph-rag:{id}",
       "mcp-tool-request": "non-persistent://tg/request/mcp-tool:{id}", "mcp-tool-response":
       "non-persistent://tg/response/mcp-tool:{id}", "next": "non-persistent://tg/request/agent:{id}",
@@ -1733,7 +1853,7 @@ items:
       {"advanced": true, "description": "LLM temperature for RAG", "order": 4, "type":
       "llm-temperature"}, "llm-temperature": {"advanced": true, "description": "LLM
       temperature", "order": 3, "type": "llm-temperature"}}, "tags": ["document-rag",
-      "graph-rag", "knowledge-extraction"]}, "document-rag+graph-rag+kgcore": {"class":
+      "graph-rag", "knowledge-extraction"]}, "document-rag+graph-rag+kgcore": {"blueprint":
       {}, "description": "GraphRAG + DocumentRAG + knowledge core creation", "flow":
       {"agent-manager:{id}": {"graph-rag-request": "non-persistent://tg/request/graph-rag:{id}",
       "graph-rag-response": "non-persistent://tg/response/graph-rag:{id}", "mcp-tool-request":
@@ -1831,7 +1951,7 @@ items:
       {"advanced": true, "description": "LLM temperature for RAG", "order": 4, "type":
       "llm-temperature"}, "llm-temperature": {"advanced": true, "description": "LLM
       temperature", "order": 3, "type": "llm-temperature"}}, "tags": ["document-rag",
-      "graph-rag", "knowledge-extraction"]}, "everything": {"class": {}, "description":
+      "graph-rag", "knowledge-extraction"]}, "everything": {"blueprint": {}, "description":
       "GraphRAG, DocumentRAG, structured data + knowledge cores", "flow": {"agent-manager:{id}":
       {"graph-rag-request": "non-persistent://tg/request/graph-rag:{id}", "graph-rag-response":
       "non-persistent://tg/response/graph-rag:{id}", "mcp-tool-request": "non-persistent://tg/request/mcp-tool:{id}",
@@ -1950,8 +2070,8 @@ items:
       true, "description": "LLM temperature for RAG", "order": 4, "type": "llm-temperature"},
       "llm-temperature": {"advanced": true, "description": "LLM temperature", "order":
       3, "type": "llm-temperature"}}, "tags": ["document-rag", "graph-rag", "knowledge-extraction",
-      "structured-data", "kgcore"]}, "graph-rag": {"class": {}, "description": "GraphRAG
-      only", "flow": {"agent-manager:{id}": {"graph-rag-request": "non-persistent://tg/request/graph-rag:{id}",
+      "structured-data", "kgcore"]}, "graph-rag": {"blueprint": {}, "description":
+      "GraphRAG only", "flow": {"agent-manager:{id}": {"graph-rag-request": "non-persistent://tg/request/graph-rag:{id}",
       "graph-rag-response": "non-persistent://tg/response/graph-rag:{id}", "mcp-tool-request":
       "non-persistent://tg/request/mcp-tool:{id}", "mcp-tool-response": "non-persistent://tg/response/mcp-tool:{id}",
       "next": "non-persistent://tg/request/agent:{id}", "prompt-request": "non-persistent://tg/request/prompt:{id}",
@@ -2029,7 +2149,7 @@ items:
       {"advanced": true, "description": "LLM temperature for RAG", "order": 4, "type":
       "llm-temperature"}, "llm-temperature": {"advanced": true, "description": "LLM
       temperature", "order": 3, "type": "llm-temperature"}}, "tags": ["graph-rag",
-      "knowledge-extraction"]}, "graph-rag+agent-extract": {"class": {}, "description":
+      "knowledge-extraction"]}, "graph-rag+agent-extract": {"blueprint": {}, "description":
       "GraphRAG + agent extract", "flow": {"agent-manager:{id}": {"graph-rag-request":
       "non-persistent://tg/request/graph-rag:{id}", "graph-rag-response": "non-persistent://tg/response/graph-rag:{id}",
       "mcp-tool-request": "non-persistent://tg/request/mcp-tool:{id}", "mcp-tool-response":
@@ -2106,7 +2226,7 @@ items:
       {"advanced": true, "description": "LLM temperature for RAG", "order": 4, "type":
       "llm-temperature"}, "llm-temperature": {"advanced": true, "description": "LLM
       temperature", "order": 3, "type": "llm-temperature"}}, "tags": ["graph-rag",
-      "knowledge-extraction", "agent-extract"]}, "graph-rag+structured-data": {"class":
+      "knowledge-extraction", "agent-extract"]}, "graph-rag+structured-data": {"blueprint":
       {}, "description": "GraphRAG + structured data", "flow": {"agent-manager:{id}":
       {"graph-rag-request": "non-persistent://tg/request/graph-rag:{id}", "graph-rag-response":
       "non-persistent://tg/response/graph-rag:{id}", "mcp-tool-request": "non-persistent://tg/request/mcp-tool:{id}",
@@ -2203,8 +2323,8 @@ items:
       true, "description": "LLM temperature for RAG", "order": 4, "type": "llm-temperature"},
       "llm-temperature": {"advanced": true, "description": "LLM temperature", "order":
       3, "type": "llm-temperature"}}, "tags": ["graph-rag", "knowledge-extraction",
-      "structured-data"]}, "onto-rag": {"class": {}, "description": "Ontology RAG
-      only", "flow": {"agent-manager:{id}": {"graph-rag-request": "non-persistent://tg/request/graph-rag:{id}",
+      "structured-data"]}, "onto-rag": {"blueprint": {}, "description": "Ontology
+      RAG only", "flow": {"agent-manager:{id}": {"graph-rag-request": "non-persistent://tg/request/graph-rag:{id}",
       "graph-rag-response": "non-persistent://tg/response/graph-rag:{id}", "mcp-tool-request":
       "non-persistent://tg/request/mcp-tool:{id}", "mcp-tool-response": "non-persistent://tg/response/mcp-tool:{id}",
       "next": "non-persistent://tg/request/agent:{id}", "prompt-request": "non-persistent://tg/request/prompt:{id}",
@@ -2280,12 +2400,13 @@ items:
       {"advanced": true, "description": "LLM temperature for RAG", "order": 4, "type":
       "llm-temperature"}, "llm-temperature": {"advanced": true, "description": "LLM
       temperature", "order": 3, "type": "llm-temperature"}}, "tags": ["graph-rag",
-      "knowledge-extraction"]}, "structured-data": {"class": {}, "description": "Structured
-      data only", "flow": {"agent-manager:{id}": {"graph-rag-request": "non-persistent://tg/request/graph-rag:{id}",
-      "graph-rag-response": "non-persistent://tg/response/graph-rag:{id}", "mcp-tool-request":
-      "non-persistent://tg/request/mcp-tool:{id}", "mcp-tool-response": "non-persistent://tg/response/mcp-tool:{id}",
-      "next": "non-persistent://tg/request/agent:{id}", "prompt-request": "non-persistent://tg/request/prompt:{id}",
-      "prompt-response": "non-persistent://tg/response/prompt:{id}", "request": "non-persistent://tg/request/agent:{id}",
+      "knowledge-extraction"]}, "structured-data": {"blueprint": {}, "description":
+      "Structured data only", "flow": {"agent-manager:{id}": {"graph-rag-request":
+      "non-persistent://tg/request/graph-rag:{id}", "graph-rag-response": "non-persistent://tg/response/graph-rag:{id}",
+      "mcp-tool-request": "non-persistent://tg/request/mcp-tool:{id}", "mcp-tool-response":
+      "non-persistent://tg/response/mcp-tool:{id}", "next": "non-persistent://tg/request/agent:{id}",
+      "prompt-request": "non-persistent://tg/request/prompt:{id}", "prompt-response":
+      "non-persistent://tg/response/prompt:{id}", "request": "non-persistent://tg/request/agent:{id}",
       "response": "non-persistent://tg/response/agent:{id}", "structured-query-request":
       "non-persistent://tg/request/structured-query:{id}", "structured-query-response":
       "non-persistent://tg/response/structured-query:{id}", "text-completion-request":
@@ -2353,134 +2474,17 @@ items:
       {"advanced": true, "description": "LLM temperature for RAG", "order": 4, "type":
       "llm-temperature"}, "llm-temperature": {"advanced": true, "description": "LLM
       temperature", "order": 3, "type": "llm-temperature"}}, "tags": ["knowledge-extraction",
-      "structured-data"]}}, "flows": {"default": {"class-name": "everything", "description":
-      "Default processing flow", "interfaces": {"agent": {"request": "non-persistent://tg/request/agent:default",
-      "response": "non-persistent://tg/response/agent:default"}, "document-embeddings":
-      {"request": "non-persistent://tg/request/document-embeddings:default", "response":
-      "non-persistent://tg/response/document-embeddings:default"}, "document-embeddings-store":
-      "persistent://tg/flow/document-embeddings-store:default", "document-load": "persistent://tg/flow/document-load:default",
-      "document-rag": {"request": "non-persistent://tg/request/document-rag:default",
-      "response": "non-persistent://tg/response/document-rag:default"}, "embeddings":
-      {"request": "non-persistent://tg/request/embeddings:default", "response": "non-persistent://tg/response/embeddings:default"},
-      "entity-contexts-load": "persistent://tg/flow/entity-contexts-load:default",
-      "graph-embeddings": {"request": "non-persistent://tg/request/graph-embeddings:default",
-      "response": "non-persistent://tg/response/graph-embeddings:default"}, "graph-embeddings-store":
-      "persistent://tg/flow/graph-embeddings-store:default", "graph-rag": {"request":
-      "non-persistent://tg/request/graph-rag:default", "response": "non-persistent://tg/response/graph-rag:default"},
-      "mcp-tool": {"request": "non-persistent://tg/request/mcp-tool:default", "response":
-      "non-persistent://tg/response/mcp-tool:default"}, "nlp-query": {"request": "non-persistent://tg/request/nlp-query:default",
-      "response": "non-persistent://tg/response/nlp-query:default"}, "objects": {"request":
-      "non-persistent://tg/request/objects:default", "response": "non-persistent://tg/response/objects:default"},
-      "objects-store": "persistent://tg/flow/objects-store:default", "prompt": {"request":
-      "non-persistent://tg/request/prompt:default", "response": "non-persistent://tg/response/prompt:default"},
-      "structured-diag": {"request": "non-persistent://tg/request/structured-diag:default",
-      "response": "non-persistent://tg/response/structured-diag:default"}, "structured-query":
-      {"request": "non-persistent://tg/request/structured-query:default", "response":
-      "non-persistent://tg/response/structured-query:default"}, "text-completion":
-      {"request": "non-persistent://tg/request/text-completion:default", "response":
-      "non-persistent://tg/response/text-completion:default"}, "text-load": "persistent://tg/flow/text-document-load:default",
-      "triples": {"request": "non-persistent://tg/request/triples:default", "response":
-      "non-persistent://tg/response/triples:default"}, "triples-store": "persistent://tg/flow/triples-store:default"},
-      "parameters": {"chunk-overlap": "50", "chunk-size": "2000", "embeddings-model":
-      "sentence-transformers/all-MiniLM-L6-v2", "llm-model": "azure", "llm-rag-model":
-      "azure", "llm-rag-temperature": "0.300", "llm-temperature": "0.300"}}}, "flows-active":
-      {"agent-manager": {"default": {"graph-rag-request": "non-persistent://tg/request/graph-rag:default",
-      "graph-rag-response": "non-persistent://tg/response/graph-rag:default", "mcp-tool-request":
-      "non-persistent://tg/request/mcp-tool:default", "mcp-tool-response": "non-persistent://tg/response/mcp-tool:default",
-      "next": "non-persistent://tg/request/agent:default", "prompt-request": "non-persistent://tg/request/prompt:default",
-      "prompt-response": "non-persistent://tg/response/prompt:default", "request":
-      "non-persistent://tg/request/agent:default", "response": "non-persistent://tg/response/agent:default",
-      "structured-query-request": "non-persistent://tg/request/structured-query:default",
-      "structured-query-response": "non-persistent://tg/response/structured-query:default",
-      "text-completion-request": "non-persistent://tg/request/text-completion:default",
-      "text-completion-response": "non-persistent://tg/response/text-completion:default"}},
-      "chunker": {"default": {"chunk-overlap": "50", "chunk-size": "2000", "input":
-      "persistent://tg/flow/text-document-load:default", "output": "persistent://tg/flow/chunk-load:default"}},
-      "de-query": {"default": {"request": "non-persistent://tg/request/document-embeddings:default",
-      "response": "non-persistent://tg/response/document-embeddings:default"}}, "de-write":
-      {"default": {"input": "persistent://tg/flow/document-embeddings-store:default"}},
-      "document-embeddings": {"default": {"embeddings-request": "non-persistent://tg/request/embeddings:default",
-      "embeddings-response": "non-persistent://tg/response/embeddings:default", "input":
-      "persistent://tg/flow/chunk-load:default", "output": "persistent://tg/flow/document-embeddings-store:default"}},
-      "document-rag": {"default": {"document-embeddings-request": "non-persistent://tg/request/document-embeddings:default",
-      "document-embeddings-response": "non-persistent://tg/response/document-embeddings:default",
-      "embeddings-request": "non-persistent://tg/request/embeddings:default", "embeddings-response":
-      "non-persistent://tg/response/embeddings:default", "prompt-request": "non-persistent://tg/request/prompt-rag:default",
-      "prompt-response": "non-persistent://tg/response/prompt-rag:default", "request":
-      "non-persistent://tg/request/document-rag:default", "response": "non-persistent://tg/response/document-rag:default"}},
-      "embeddings": {"default": {"model": "sentence-transformers/all-MiniLM-L6-v2",
-      "request": "non-persistent://tg/request/embeddings:default", "response": "non-persistent://tg/response/embeddings:default"}},
-      "ge-query": {"default": {"request": "non-persistent://tg/request/graph-embeddings:default",
-      "response": "non-persistent://tg/response/graph-embeddings:default"}}, "ge-write":
-      {"default": {"input": "persistent://tg/flow/graph-embeddings-store:default"}},
-      "graph-embeddings": {"default": {"embeddings-request": "non-persistent://tg/request/embeddings:default",
-      "embeddings-response": "non-persistent://tg/response/embeddings:default", "input":
-      "persistent://tg/flow/entity-contexts-load:default", "output": "persistent://tg/flow/graph-embeddings-store:default"}},
-      "graph-rag": {"default": {"embeddings-request": "non-persistent://tg/request/embeddings:default",
-      "embeddings-response": "non-persistent://tg/response/embeddings:default", "graph-embeddings-request":
-      "non-persistent://tg/request/graph-embeddings:default", "graph-embeddings-response":
-      "non-persistent://tg/response/graph-embeddings:default", "prompt-request": "non-persistent://tg/request/prompt-rag:default",
-      "prompt-response": "non-persistent://tg/response/prompt-rag:default", "request":
-      "non-persistent://tg/request/graph-rag:default", "response": "non-persistent://tg/response/graph-rag:default",
-      "triples-request": "non-persistent://tg/request/triples:default", "triples-response":
-      "non-persistent://tg/response/triples:default"}}, "kg-extract-definitions":
-      {"default": {"entity-contexts": "persistent://tg/flow/entity-contexts-load:default",
-      "input": "persistent://tg/flow/chunk-load:default", "prompt-request": "non-persistent://tg/request/prompt:default",
-      "prompt-response": "non-persistent://tg/response/prompt:default", "triples":
-      "persistent://tg/flow/triples-store:default"}}, "kg-extract-objects": {"default":
-      {"entity-contexts": "persistent://tg/flow/entity-contexts-load:default", "input":
-      "persistent://tg/flow/chunk-load:default", "output": "persistent://tg/flow/objects-store:default",
-      "prompt-request": "non-persistent://tg/request/prompt:default", "prompt-response":
-      "non-persistent://tg/response/prompt:default"}}, "kg-extract-relationships":
-      {"default": {"input": "persistent://tg/flow/chunk-load:default", "prompt-request":
-      "non-persistent://tg/request/prompt:default", "prompt-response": "non-persistent://tg/response/prompt:default",
-      "triples": "persistent://tg/flow/triples-store:default"}}, "mcp-tool": {"default":
-      {"request": "non-persistent://tg/request/mcp-tool:default", "response": "non-persistent://tg/response/mcp-tool:default",
-      "text-completion-request": "non-persistent://tg/request/text-completion:default",
-      "text-completion-response": "non-persistent://tg/response/text-completion:default"}},
-      "metering": {"default": {"input": "non-persistent://tg/response/text-completion:default"}},
-      "metering-rag": {"default": {"input": "non-persistent://tg/response/text-completion-rag:default"}},
-      "nlp-query": {"default": {"prompt-request": "non-persistent://tg/request/prompt-rag:default",
-      "prompt-response": "non-persistent://tg/response/prompt-rag:default", "request":
-      "non-persistent://tg/request/nlp-query:default", "response": "non-persistent://tg/response/nlp-query:default"}},
-      "objects-query": {"default": {"request": "non-persistent://tg/request/objects:default",
-      "response": "non-persistent://tg/response/objects:default"}}, "objects-write":
-      {"default": {"input": "persistent://tg/flow/objects-store:default"}}, "pdf-decoder":
-      {"default": {"input": "persistent://tg/flow/document-load:default", "output":
-      "persistent://tg/flow/text-document-load:default"}}, "prompt": {"default": {"request":
-      "non-persistent://tg/request/prompt:default", "response": "non-persistent://tg/response/prompt:default",
-      "text-completion-request": "non-persistent://tg/request/text-completion:default",
-      "text-completion-response": "non-persistent://tg/response/text-completion:default"}},
-      "prompt-rag": {"default": {"request": "non-persistent://tg/request/prompt-rag:default",
-      "response": "non-persistent://tg/response/prompt-rag:default", "text-completion-request":
-      "non-persistent://tg/request/text-completion-rag:default", "text-completion-response":
-      "non-persistent://tg/response/text-completion-rag:default"}}, "structured-diag":
-      {"default": {"prompt-request": "non-persistent://tg/request/prompt:default",
-      "prompt-response": "non-persistent://tg/response/prompt:default", "request":
-      "non-persistent://tg/request/structured-diag:default", "response": "non-persistent://tg/response/structured-diag:default"}},
-      "structured-query": {"default": {"nlp-query-request": "non-persistent://tg/request/nlp-query:default",
-      "nlp-query-response": "non-persistent://tg/response/nlp-query:default", "objects-query-request":
-      "non-persistent://tg/request/objects:default", "objects-query-response": "non-persistent://tg/response/objects:default",
-      "request": "non-persistent://tg/request/structured-query:default", "response":
-      "non-persistent://tg/response/structured-query:default"}}, "text-completion":
-      {"default": {"model": "azure", "request": "non-persistent://tg/request/text-completion:default",
-      "response": "non-persistent://tg/response/text-completion:default"}}, "text-completion-rag":
-      {"default": {"model": "azure", "request": "non-persistent://tg/request/text-completion-rag:default",
-      "response": "non-persistent://tg/response/text-completion-rag:default"}}, "triples-query":
-      {"default": {"request": "non-persistent://tg/request/triples:default", "response":
-      "non-persistent://tg/response/triples:default"}}, "triples-write": {"default":
-      {"input": "persistent://tg/flow/triples-store:default"}}}, "interface-descriptions":
-      {"agent": {"description": "Agent service", "kind": "request-response"}, "document-embeddings":
-      {"description": "Document embeddings service", "kind": "request-response"},
-      "document-embeddings-store": {"description": "Document embeddings loader", "kind":
-      "send"}, "document-load": {"description": "Document loader", "kind": "send",
-      "visible": true}, "document-rag": {"description": "ChunkRAG service", "kind":
-      "request-response"}, "entity-contexts-load": {"description": "Entity contexts
-      loader", "kind": "send"}, "graph-embeddings": {"description": "Graph embeddings
-      service", "kind": "request-response"}, "graph-embeddings-store": {"description":
-      "Graph embeddings loader", "kind": "send"}, "graph-rag": {"description": "GraphRAG
-      service", "kind": "request-response"}, "nlp-query": {"description": "NLP question
-      to GraphQL service", "kind": "request-response"}, "objects": {"description":
+      "structured-data"]}}, "interface-description": {"agent": {"description": "Agent
+      service", "kind": "request-response"}, "document-embeddings": {"description":
+      "Document embeddings service", "kind": "request-response"}, "document-embeddings-store":
+      {"description": "Document embeddings loader", "kind": "send"}, "document-load":
+      {"description": "Document loader", "kind": "send", "visible": true}, "document-rag":
+      {"description": "ChunkRAG service", "kind": "request-response"}, "entity-contexts-load":
+      {"description": "Entity contexts loader", "kind": "send"}, "graph-embeddings":
+      {"description": "Graph embeddings service", "kind": "request-response"}, "graph-embeddings-store":
+      {"description": "Graph embeddings loader", "kind": "send"}, "graph-rag": {"description":
+      "GraphRAG service", "kind": "request-response"}, "nlp-query": {"description":
+      "NLP question to GraphQL service", "kind": "request-response"}, "objects": {"description":
       "Object query service", "kind": "request-response"}, "objects-store": {"description":
       "Object store", "kind": "request-response"}, "prompt": {"description": "Prompt
       service", "kind": "request-response"}, "structured-query": {"description": "Structured
@@ -2489,7 +2493,7 @@ items:
       "Text document loader", "kind": "send", "visible": true}, "triples": {"description":
       "Triples query service", "kind": "request-response"}, "triples-store": {"description":
       "Triples loader", "kind": "send"}}, "mcp": {"duckduckgo": {"remote-name": "search",
-      "url": "http://ddg-mcp-server:9870/mcp"}}, "parameter-types": {"chunk-overlap":
+      "url": "http://ddg-mcp-server:9870/mcp"}}, "parameter-type": {"chunk-overlap":
       {"default": 50, "description": "Chunk overlap", "helper": "An integer, usually
       50 .. 100", "max": 8000, "min": 0, "placeholder": 50, "required": true, "type":
       "integer"}, "chunk-size": {"default": 2000, "description": "Chunk size", "helper":
@@ -2523,24 +2527,26 @@ items:
       {"description": "bge-large-en-v1.5", "id": "BAAI/bge-large-en-v1.5"}, {"description":
       "gte-large", "id": "thenlper/gte-large"}, {"description": "multilingual-e5-large",
       "id": "intfloat/multilingual-e5-large"}], "required": true, "type": "string"},
-      "llm-model": {"default": "azure", "description": "LLM model to use", "enum":
-      [{"description": "Azure", "id": "azure"}], "required": true, "type": "string"},
-      "llm-temperature": {"default": 0.3, "description": "LLM temperature", "helper":
-      "A floating point number between 0 and 1", "max": 10, "min": 0, "placeholder":
-      0.3, "required": true, "type": "float"}}, "prompt": {"system": "You are a helpful
-      assistant.", "template-index": ["agent-kg-extract", "agent-react", "diagnose-csv",
-      "diagnose-json", "diagnose-structured-data", "diagnose-xml", "document-prompt",
-      "extract-definitions", "extract-relationships", "extract-rows", "extract-topics",
-      "extract-with-ontologies", "graphql-generation", "kg-prompt", "question", "schema-selection"],
-      "template.agent-kg-extract": {"prompt": "Analyze the following text and extract
-      both entity definitions and relationships. Return the results as JSON with ''definitions''
-      and ''relationships'' arrays.\n\nFor definitions, extract entities and their
-      explanations or descriptions.\nFor relationships, extract subject-predicate-object
-      triples where subjects and objects are entities, and predicates are relationship
-      types.\n\nText: {{text}}\n\nReturn JSON only, no other text. Use this exact
-      format:\n{\n  \"definitions\": [\n    {\n      \"entity\": \"entity_name\",\n      \"definition\":
-      \"definition_text\"\n    }\n  ],\n  \"relationships\": [\n    {\n      \"subject\":
-      \"subject_entity\",\n      \"predicate\": \"relationship_type\",\n      \"object\":
+      "llm-model": {"default": "mistral-large-3", "description": "LLM model to use",
+      "enum": [{"description": "Mistral Large 3", "id": "mistral-large-3"}, {"description":
+      "Mistral Small 2503", "id": "mistral-small"}, {"description": "ChatGPT 4o",
+      "id": "gpt-4o"}, {"description": "ChatGPT 4o mini", "id": "gpt-4o-mini"}], "required":
+      true, "type": "string"}, "llm-temperature": {"default": 0.3, "description":
+      "LLM temperature", "helper": "A floating point number between 0 and 1", "max":
+      10, "min": 0, "placeholder": 0.3, "required": true, "type": "float"}}, "prompt":
+      {"system": "You are a helpful assistant.", "template-index": ["agent-kg-extract",
+      "agent-react", "diagnose-csv", "diagnose-json", "diagnose-structured-data",
+      "diagnose-xml", "document-prompt", "extract-definitions", "extract-relationships",
+      "extract-rows", "extract-topics", "extract-with-ontologies", "graphql-generation",
+      "kg-prompt", "question", "schema-selection"], "template.agent-kg-extract": {"prompt":
+      "Analyze the following text and extract both entity definitions and relationships.
+      Return the results as JSON with ''definitions'' and ''relationships'' arrays.\n\nFor
+      definitions, extract entities and their explanations or descriptions.\nFor relationships,
+      extract subject-predicate-object triples where subjects and objects are entities,
+      and predicates are relationship types.\n\nText: {{text}}\n\nReturn JSON only,
+      no other text. Use this exact format:\n{\n  \"definitions\": [\n    {\n      \"entity\":
+      \"entity_name\",\n      \"definition\": \"definition_text\"\n    }\n  ],\n  \"relationships\":
+      [\n    {\n      \"subject\": \"subject_entity\",\n      \"predicate\": \"relationship_type\",\n      \"object\":
       \"object_entity_or_literal\",\n      \"object-entity\": true\n    }\n  ]\n}\n",
       "response-type": "json", "schema": {"properties": {"definitions": {"items":
       {"properties": {"definition": {"type": "string"}, "entity": {"type": "string"}},
@@ -3322,7 +3328,7 @@ items:
       of schema names, nothing else.\nExample: [\"customers\", \"orders\", \"products\"]\n",
       "response-type": "json", "schema": {"description": "An array of schema names
       that are relevant to answering the given question", "items": {"type": "string"},
-      "type": "array"}}}, "token-costs": {"anthropic.claude-3-5-sonnet-20240620-v1:0":
+      "type": "array"}}}, "token-cost": {"anthropic.claude-3-5-sonnet-20240620-v1:0":
       {"input_price": 3e-06, "model_name": "anthropic.claude-3-5-sonnet-20240620-v1:0",
       "output_price": 1.5e-05}, "anthropic.claude-3-haiku-20240307-v1:0": {"input_price":
       2.5e-07, "model_name": "anthropic.claude-3-haiku-20240307-v1:0", "output_price":
@@ -3393,7 +3399,7 @@ items:
           - http://pulsar:8080
           - --config-file
           - /trustgraph/config.json
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: init-trustgraph
           resources:
             limits:
@@ -3437,8 +3443,8 @@ items:
           - --concurrency
           - '1'
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: kg-extract-agent
           resources:
             limits:
@@ -3488,8 +3494,8 @@ items:
           - --concurrency
           - '1'
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: kg-extract-definitions
           resources:
             limits:
@@ -3539,8 +3545,8 @@ items:
           - --concurrency
           - '1'
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: kg-extract-objects
           resources:
             limits:
@@ -3590,8 +3596,8 @@ items:
           - --concurrency
           - '1'
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: kg-extract-ontology
           resources:
             limits:
@@ -3641,8 +3647,8 @@ items:
           - --concurrency
           - '1'
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: kg-extract-relationships
           resources:
             limits:
@@ -3690,8 +3696,8 @@ items:
           - -p
           - pulsar://pulsar:6650
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: kg-manager
           resources:
             limits:
@@ -3739,8 +3745,8 @@ items:
           - -p
           - pulsar://pulsar:6650
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: kg-store
           resources:
             limits:
@@ -3788,7 +3794,7 @@ items:
           - -p
           - pulsar://pulsar:6650
           - --log-level
-          - DEBUG
+          - INFO
           - --object-store-endpoint
           - garage:3900
           - --object-store-access-key
@@ -3797,15 +3803,15 @@ items:
           - b171f00be9be4c32c734f4c05fe64c527a8ab5eb823b376cfa8c2531f70fc427
           - --object-store-region
           - garage
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: librarian
           resources:
             limits:
               cpu: '0.5'
-              memory: 256M
+              memory: 1024M
             requests:
               cpu: '0.1'
-              memory: 256M
+              memory: 1024M
           securityContext:
             runAsGroup: 0
             runAsUser: 0
@@ -3945,7 +3951,7 @@ items:
               secretKeyRef:
                 key: mcp-server-secret
                 name: mcp-server-secret
-          image: docker.io/trustgraph/trustgraph-mcp:1.8.12
+          image: docker.io/trustgraph/trustgraph-mcp:1.8.20
           name: mcp-server
           ports:
           - containerPort: 8000
@@ -3996,8 +4002,8 @@ items:
           - -p
           - pulsar://pulsar:6650
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: mcp-tool
           resources:
             limits:
@@ -4045,8 +4051,8 @@ items:
           - -p
           - pulsar://pulsar:6650
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: metering
           resources:
             limits:
@@ -4096,8 +4102,8 @@ items:
           - --id
           - metering-rag
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: metering-rag
           resources:
             limits:
@@ -4145,8 +4151,8 @@ items:
           - -p
           - pulsar://pulsar:6650
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: nlp-query
           resources:
             limits:
@@ -4194,8 +4200,8 @@ items:
           - -p
           - pulsar://pulsar:6650
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: pdf-decoder
           resources:
             limits:
@@ -4385,8 +4391,8 @@ items:
           - --concurrency
           - '1'
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: prompt
           resources:
             limits:
@@ -4438,8 +4444,8 @@ items:
           - --concurrency
           - '1'
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: prompt-rag
           resources:
             limits:
@@ -4606,7 +4612,7 @@ items:
           - bin/apply-config-from-env.py conf/bookkeeper.conf && exec bin/pulsar bookie
           env:
           - name: BOOKIE_MEM
-            value: -Xms256m -Xmx256m -XX:MaxDirectMemorySize=256m
+            value: -Xms512m -Xmx512m -XX:MaxDirectMemorySize=512m
           - name: advertisedAddress
             value: bookie
           - name: bookieId
@@ -4625,10 +4631,10 @@ items:
           resources:
             limits:
               cpu: '1'
-              memory: 1024M
+              memory: 2048M
             requests:
               cpu: '0.1'
-              memory: 1024M
+              memory: 2048M
           securityContext:
             runAsGroup: 0
             runAsUser: 0
@@ -4663,7 +4669,7 @@ items:
           - bin/apply-config-from-env.py conf/broker.conf && exec bin/pulsar broker
           env:
           - name: PULSAR_MEM
-            value: -Xms384m -Xmx384m -XX:MaxDirectMemorySize=384m
+            value: -Xms512m -Xmx512m -XX:MaxDirectMemorySize=512m
           - name: advertisedAddress
             value: pulsar
           - name: advertisedListeners
@@ -4690,10 +4696,10 @@ items:
           resources:
             limits:
               cpu: '1'
-              memory: 800M
+              memory: 1500M
             requests:
               cpu: '0.1'
-              memory: 800M
+              memory: 1500M
           securityContext:
             runAsGroup: 0
             runAsUser: 0
@@ -4837,8 +4843,8 @@ items:
           - -t
           - http://qdrant:6333
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: query-doc-embeddings
           resources:
             limits:
@@ -4888,8 +4894,8 @@ items:
           - -t
           - http://qdrant:6333
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: query-graph-embeddings
           resources:
             limits:
@@ -4939,8 +4945,8 @@ items:
           - --cassandra-host
           - cassandra
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: query-objects
           resources:
             limits:
@@ -4990,8 +4996,8 @@ items:
           - --cassandra-host
           - cassandra
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: query-triples
           resources:
             limits:
@@ -5041,16 +5047,16 @@ items:
           - -t
           - http://qdrant:6333
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: store-doc-embeddings
           resources:
             limits:
               cpu: '0.5'
-              memory: 128M
+              memory: 256M
             requests:
               cpu: '0.1'
-              memory: 128M
+              memory: 256M
           securityContext:
             runAsGroup: 0
             runAsUser: 0
@@ -5092,8 +5098,8 @@ items:
           - -t
           - http://qdrant:6333
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: store-graph-embeddings
           resources:
             limits:
@@ -5143,8 +5149,8 @@ items:
           - --cassandra-host
           - cassandra
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: store-objects
           resources:
             limits:
@@ -5194,8 +5200,8 @@ items:
           - --cassandra-host
           - cassandra
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: store-triples
           resources:
             limits:
@@ -5243,8 +5249,8 @@ items:
           - -p
           - pulsar://pulsar:6650
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: structured-diag
           resources:
             limits:
@@ -5292,8 +5298,8 @@ items:
           - -p
           - pulsar://pulsar:6650
           - --log-level
-          - DEBUG
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+          - INFO
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: structured-query
           resources:
             limits:
@@ -5337,7 +5343,7 @@ items:
       spec:
         containers:
         - command:
-          - text-completion-azure
+          - text-completion-openai
           - -p
           - pulsar://pulsar:6650
           - -x
@@ -5345,19 +5351,19 @@ items:
           - -t
           - '0.000'
           - --log-level
-          - DEBUG
+          - INFO
           env:
-          - name: AZURE_TOKEN
+          - name: OPENAI_TOKEN
             valueFrom:
               secretKeyRef:
-                key: azure-token
-                name: azure-ai-credentials
-          - name: AZURE_ENDPOINT
+                key: openai-token
+                name: openai-credentials
+          - name: OPENAI_BASE_URL
             valueFrom:
               secretKeyRef:
-                key: azure-endpoint
-                name: azure-ai-credentials
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+                key: openai-url
+                name: openai-credentials
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: text-completion
           resources:
             limits:
@@ -5401,7 +5407,7 @@ items:
       spec:
         containers:
         - command:
-          - text-completion-azure
+          - text-completion-openai
           - -p
           - pulsar://pulsar:6650
           - --id
@@ -5411,19 +5417,19 @@ items:
           - -t
           - '0.000'
           - --log-level
-          - DEBUG
+          - INFO
           env:
-          - name: AZURE_TOKEN
+          - name: OPENAI_TOKEN
             valueFrom:
               secretKeyRef:
-                key: azure-token
-                name: azure-ai-credentials
-          - name: AZURE_ENDPOINT
+                key: openai-token
+                name: openai-credentials
+          - name: OPENAI_BASE_URL
             valueFrom:
               secretKeyRef:
-                key: azure-endpoint
-                name: azure-ai-credentials
-          image: docker.io/trustgraph/trustgraph-flow:1.8.12
+                key: openai-url
+                name: openai-credentials
+          image: docker.io/trustgraph/trustgraph-flow:1.8.20
           name: text-completion-rag
           resources:
             limits:
@@ -5466,7 +5472,7 @@ items:
           app: workbench-ui
       spec:
         containers:
-        - image: docker.io/trustgraph/workbench-ui:1.4.4
+        - image: docker.io/trustgraph/workbench-ui:1.5.5
           name: workbench-ui
           ports:
           - containerPort: 8888

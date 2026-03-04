@@ -28,7 +28,7 @@ export const cluster = new containerservice.ManagedCluster(
         }],
         dnsPrefix: pulumi.interpolate`${resourceGroup.name}-aks`,
         enableRBAC: true,
-        kubernetesVersion: "1.32.0",
+        kubernetesVersion: "1.32.0", // FIXME: 1.33.6
         linuxProfile: {
             adminUsername: "aksuser",
             ssh: {
