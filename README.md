@@ -193,3 +193,33 @@ pip install --no-cache --upgrade git+https://github.com/trustgraph-ai/trustgraph
 tg-build-deployment -i config.json -t 1.8 -v 1.8.20 --platform aks-k8s -R > resources.yaml
 ```
 
+## Customizing memory settings
+
+The `config.json` file includes an `override` component that allows
+customization of memory settings for various services. Parameters use a
+prefix-routing convention where `component-parameter` routes to the
+component's parameter.
+
+For example, in `config.json`:
+
+```json
+{
+    "name": "override",
+    "parameters": {
+        "cassandra-heap": "500M",
+        "cassandra-memory-limit": "2000M",
+        "pulsar-bookie-heap": "512m",
+        "pulsar-broker-memory-limit": "1500M",
+        "api-gateway-memory-limit": "768M",
+        "librarian-memory-limit": "1024M"
+    }
+}
+```
+
+Available prefixes include:
+- `cassandra-` - Cassandra database settings (heap, memory-limit, memory-reservation)
+- `pulsar-` - Pulsar messaging settings (bookie-heap, broker-heap, etc.)
+- `qdrant-` - Qdrant vector store settings
+- `api-gateway-` - API gateway settings
+- `librarian-` - Librarian service settings
+
