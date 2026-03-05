@@ -8,22 +8,20 @@ platform.
 
 The full stack includes:
 
-- It's own resource group
+- Its own resource group
 - An Azure Identity service principal account to run various components.
 - An AKS cluster deployed in its own resource group (that's just what Azure
   does).
 - A key vault and storage account for the AI components (because, required)
-- Using Machine Learning Services (AI Foundry in the console), deploys
-  an AI hub, workspace and serverless endpoint hosting the Phi-4 model.
-- Using Cognitive Services (AI Services in the console), deploys
-  an AI account and deployment running OpenAI GPT-4o-mini.
+- Using AI Foundry, deploys an AI hub and project with 4 model deployments:
+  - gpt-4o
+  - gpt-4o-mini
+  - Mistral-Large-3
+  - mistral-small-2503
 - Deploys a complete TrustGraph stack of resources in AKS
 
 Keys and other configuration for the AI components are configured into
 TrustGraph using secrets.
-
-Although the Pulumi configuration configures both a phi-4 and an OpenAI
-model, the invocation depends on the resource.yaml.* files.
 
 ## How it works
 
@@ -44,11 +42,6 @@ Roadmap to deploy is:
 # Deploy
 
 ## Deploy Pulumi
-
-Decide whether you want TrustGraph to use OpenAI or Phi-4.
-
-- For Phi-3 copy resources.yaml.mls to resources.yaml
-- For OpenAI copy resources.yaml.cs to resources.yaml
 
 Navigate to the Pulumi directory:
 
@@ -104,18 +97,11 @@ You can edit:
 The `Pulumi.STACKNAME.yaml` configuration file contains settings for:
 
 - `trustgraph-azure:location` - Azure deployment location
-- `trustgraph-azure:environment` - Name of the environment you are deploying
+- `trustgraph-azure:environment` - Name of the environment you are deploying,
   use a name like: dev, prod etc.
-- `trustgraph-azure:ai-endpoint-model` - the Machine Learning Services
-  model to deploy.  Look in the model catalog for a Model ID
-  e.g. `azureml://registries/azureml/models/Phi-4`.
-- `trustgraph-azure:ai-openai-model` - the OpenAI model name e.g. gpt-4o-mini
-- `trustgraph-azure:ai-openai-version` - the OpenAI model version which is
-  in date format e.g. "2024-07-18".  Use quotes so that Pulumi doesn't
-  interpret as a date
-- `trustgraph-azure:ai-openai-format` - model format e.g. OpenAI
-- `trustgraph-azure:ai-openai-rai-policy` - the content filtering
-  policy.  RAI = Responsible AI?  e.g. `Microsoft.DefaultV2`.
+- `trustgraph-azure:node-size` - The VM size for AKS nodes
+  e.g. `Standard_D8s_v5`
+- `trustgraph-azure:node-count` - Number of nodes in the AKS cluster
 
 ## Deploy
 
@@ -160,7 +146,7 @@ browser using `http://localhost:3000` and `http://localhost:8888`
 respectively.
 
 
-## Deploy
+## Destroy
 
 ```
 pulumi destroy
@@ -170,66 +156,34 @@ Just say yes.
 
 ## Useful commands
 
-Increase quota for CPUs...
+You may need to increase CPU quota for your node VM family and location.
+For example, to increase quota for Standard_DSv5 VMs in swedencentral:
 
 ```
-az quota create --resource-name "standardDsv5Family" \
-    --scope /subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/ukwest \
-    --limit-object value=20 --resource-type dedicated
+az quota update --resource-name "standardDSv5Family" \
+  --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/swedencentral" \
+  --limit-object value=20
 ```
 
-```
-az quota create --resource-name "gpt-4o" \
-  --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.CognitiveServices/locations/eastus" \
-  --limit-object value=50 \
-  --resource-type "GlobalStandard"
-```
+Adjust the `--resource-name` and location to match your `node-size` and
+`location` settings in `Pulumi.STACKNAME.yaml`.
 
-```
-az quota create --resource-name "cores" \
-  --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/westus3" \
-  --limit-object value=20 \
-  --resource-type "dedicated"
-```
+## Changing the deployed models
 
-```
-az quota create --resource-name "standardDSv5Family" \
-  --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/westus3" \
-  --limit-object value=20 \
-  --resource-type "dedicated"
-```
+The AI models are defined in `pulumi/ai-models.ts`. Each model is deployed
+as a `cognitiveservices.Deployment` resource. To change the models:
 
-```
-az quota create --resource-name "standardDSv4Family" \
-  --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/westus3" \
-  --limit-object value=20 \
-  --resource-type "dedicated"
-```
+1. Edit `pulumi/ai-models.ts` to add, remove, or modify model deployments
+2. Ensure the `dependsOn` chain is maintained so models deploy sequentially
+   (Azure doesn't handle parallel model deployments well)
+3. Update `resources.yaml` to reference the models you want TrustGraph to use
 
-```
-  az quota create \
-    --resource-name "StandardDadsv7Family" \
-    --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/uksouth" \
-    --limit-object value=32 \
-    --resource-type "dedicated"
-```
-
-```
-az quota update --resource-name "standardDv5Family" --scope "/subscriptions/$(az account show --query id -o  tsv)/providers/Microsoft.Compute/locations/swedencentral" --limit-object value=20
-```
-
-```
-az quota update --resource-name "standardDSv5Family" --scope "/subscriptions/$(az account show --query id -o  tsv)/providers/Microsoft.Compute/locations/swedencentral" --limit-object value=20
-```
-
-```
-az quota update --resource-name "standardDadsv7Family" --scope "/subscriptions/$(az account show --query id -o  tsv)/providers/Microsoft.Compute/locations/uksouth" --limit-object value=20
-```
+Available models can be found in the Azure AI Foundry model catalog.
 
 ## How the config was built
 
-The AI model specified in the config.json should match the model in the
-AI endpoint hostname specified in the Pulumi config.
+The AI models specified in `config.json` should match the models deployed
+by Pulumi (gpt-4o, gpt-4o-mini, Mistral-Large-3, mistral-small-2503).
 
 ```
 rm -rf env
