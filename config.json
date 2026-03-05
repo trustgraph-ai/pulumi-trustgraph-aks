@@ -57,5 +57,33 @@
 		"required": true
 	    }
         }
+    },
+    {
+	"name": "override",
+	"parameters": {
+	    "cassandra" +: {
+		"heap":: "500M",
+		"memory-limit":: "2000M",
+		"memory-reservation":: "2000M"
+	    },
+	    "pulsar" +: {
+		"bookie-memory-limit":: "2048M",
+		"bookie-memory-reservation":: "2048M",
+		"bookie-heap":: "512m",
+		"bookie-direct-memory":: "512m",
+		"broker-memory-limit":: "1500M",
+		"broker-memory-reservation":: "1500M",
+		"broker-heap":: "512m",
+		"broker-direct-memory":: "512m"
+	    },
+	    "api-gateway" +: {
+		"memory-limit":: "768M",
+		"memory-reservation":: "768M"
+	    },
+	    "librarian" +: {
+		"memory-limit":: "1024M",
+		"memory-reservation":: "1024M"
+	    }
+	}
     }
 ]
