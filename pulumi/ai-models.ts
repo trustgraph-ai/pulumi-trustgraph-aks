@@ -7,21 +7,21 @@ import { aiHub, aiProject } from './ai-project';
 // We use dependsOn to make the deployments happen serially.  Azure
 // flips out if you try to deploy more than one at once
 
-export const gpt4o = new cognitiveservices.Deployment(
-    "gpt-4o-deployment",
+export const gpt5Nano = new cognitiveservices.Deployment(
+    "gpt-5-4-nano-deployment",
     {
-        deploymentName: "gpt-4o",
+        deploymentName: "gpt-5.4-nano",
         accountName: aiHub.name,
         resourceGroupName: resourceGroup.name,
         sku: {
-            name: "Standard",
-            capacity: 10, // Tokens-per-minute (TPM) in thousands
+            name: "GlobalStandard",
+            capacity: 25, // Tokens-per-minute (TPM) in thousands
         },
         properties: {
             model: {
                 format: "OpenAI",
-                name: "gpt-4o",
-                version: "2024-11-20",
+                name: "gpt-5.4-nano",
+                version: "2026-03-17",
             },
             versionUpgradeOption: "OnceNewDefaultVersionAvailable",
         },
@@ -29,26 +29,26 @@ export const gpt4o = new cognitiveservices.Deployment(
     { provider: azureProvider, parent: aiHub, dependsOn: [aiProject] }
 );
 
-export const gpt4oMini = new cognitiveservices.Deployment(
-    "gpt-4o-mini-deployment",
+export const gpt5Mini = new cognitiveservices.Deployment(
+    "gpt-5-4-mini-deployment",
     {
-        deploymentName: "gpt-4o-mini",
+        deploymentName: "gpt-5.4-mini",
         accountName: aiHub.name,
         resourceGroupName: resourceGroup.name,
         sku: {
-            name: "Standard",
-            capacity: 10, // Tokens-per-minute (TPM) in thousands
+            name: "GlobalStandard",
+            capacity: 15, // Tokens-per-minute (TPM) in thousands
         },
         properties: {
             model: {
                 format: "OpenAI",
-                name: "gpt-4o-mini",
-                version: "2024-07-18",
+                name: "gpt-5.4-mini",
+                version: "2026-03-17",
             },
             versionUpgradeOption: "OnceNewDefaultVersionAvailable",
         },
     },
-    { provider: azureProvider, parent: aiHub, dependsOn: [gpt4o] }
+    { provider: azureProvider, parent: aiHub, dependsOn: [gpt5Nano] }
 );
 
 export const mistralLarge = new cognitiveservices.Deployment(
@@ -72,7 +72,7 @@ export const mistralLarge = new cognitiveservices.Deployment(
     {
         provider: azureProvider,
         parent: aiHub,
-        dependsOn: [gpt4oMini] 
+        dependsOn: [gpt5Mini] 
     }
 );
 
