@@ -34,7 +34,7 @@
 	    "models": {
 		"type": "string",
 		"description": "LLM model to use",
-		"default": "mistral-large-3",
+		"default": "gpt-5.4-nano",
 		"enum": [
 		    {
 			id: "mistral-large-3",
@@ -45,12 +45,12 @@
 			description: "Mistral Small 2503"
 		    },
 		    {
-			id: "gpt-4o",
-			description: "ChatGPT 4o"
+			id: "gpt-5.4-nano",
+			description: "ChatGPT 5.4 Nano"
 		    },
 		    {
-			id: "gpt-4o-mini",
-			description: "ChatGPT 4o mini"
+			id: "gpt-5.4-mini",
+			description: "ChatGPT 5.4 Mini"
 		    },
 		],
 		"required": true

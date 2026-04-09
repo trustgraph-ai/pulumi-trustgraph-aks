@@ -1733,9 +1733,9 @@ items:
       "nlp-query-response": "response:tg:nlp-query:default", "request": "request:tg:structured-query:default",
       "response": "response:tg:structured-query:default", "rows-query-request": "request:tg:rows:default",
       "rows-query-response": "response:tg:rows:default"}}, "text-completion": {"default":
-      {"model": "mistral-large-3", "request": "request:tg:text-completion:default",
-      "response": "response:tg:text-completion:default"}}, "text-completion-rag":
-      {"default": {"model": "mistral-large-3", "request": "request:tg:text-completion-rag:default",
+      {"model": "gpt-5.4-nano", "request": "request:tg:text-completion:default", "response":
+      "response:tg:text-completion:default"}}, "text-completion-rag": {"default":
+      {"model": "gpt-5.4-nano", "request": "request:tg:text-completion-rag:default",
       "response": "response:tg:text-completion-rag:default"}}, "triples-query": {"default":
       {"request": "request:tg:triples:default", "response": "response:tg:triples:default"}},
       "triples-write": {"default": {"input": "flow:tg:triples-store:default"}}}, "agent-pattern":
@@ -1788,7 +1788,7 @@ items:
       "triples": {"request": "request:tg:triples:default", "response": "response:tg:triples:default"},
       "triples-store": "flow:tg:triples-store:default"}, "parameters": {"chunk-overlap":
       "50", "chunk-size": "2000", "embeddings-model": "sentence-transformers/all-MiniLM-L6-v2",
-      "llm-model": "mistral-large-3", "llm-rag-model": "mistral-large-3", "llm-rag-temperature":
+      "llm-model": "gpt-5.4-nano", "llm-rag-model": "gpt-5.4-nano", "llm-rag-temperature":
       "0.300", "llm-temperature": "0.300"}}}, "flow-blueprint": {"everything": {"blueprint":
       {}, "description": "Graph RAG + Document RAG + knowledge cores", "flow": {"agent-manager:{id}":
       {"embeddings-request": "request:tg:embeddings:{id}", "embeddings-response":
@@ -2106,11 +2106,11 @@ items:
       {"description": "bge-large-en-v1.5", "id": "BAAI/bge-large-en-v1.5"}, {"description":
       "gte-large", "id": "thenlper/gte-large"}, {"description": "multilingual-e5-large",
       "id": "intfloat/multilingual-e5-large"}], "required": true, "type": "string"},
-      "llm-model": {"default": "mistral-large-3", "description": "LLM model to use",
+      "llm-model": {"default": "gpt-5.4-nano", "description": "LLM model to use",
       "enum": [{"description": "Mistral Large 3", "id": "mistral-large-3"}, {"description":
-      "Mistral Small 2503", "id": "mistral-small"}, {"description": "ChatGPT 4o",
-      "id": "gpt-4o"}, {"description": "ChatGPT 4o mini", "id": "gpt-4o-mini"}], "required":
-      true, "type": "string"}, "llm-temperature": {"default": 0.3, "description":
+      "Mistral Small 2503", "id": "mistral-small"}, {"description": "ChatGPT 5.4 Nano",
+      "id": "gpt-5.4-nano"}, {"description": "ChatGPT 5.4 Mini", "id": "gpt-5.4-mini"}],
+      "required": true, "type": "string"}, "llm-temperature": {"default": 0.3, "description":
       "LLM temperature", "helper": "A floating point number between 0 and 1", "max":
       10, "min": 0, "placeholder": 0.3, "required": true, "type": "float"}}, "prompt":
       {"system": "You are a helpful assistant.", "template-index": ["agent-kg-extract",
