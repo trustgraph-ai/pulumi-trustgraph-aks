@@ -1,0 +1,3 @@
+name: trustgraph-azure
+description: Trustgraph deployment on Azure
+runtime: nodejs
