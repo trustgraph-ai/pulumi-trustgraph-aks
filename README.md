@@ -145,6 +145,21 @@ This will allow you to access Grafana and the Workbench UI from your local
 browser using `http://localhost:3000` and `http://localhost:8888`
 respectively.
 
+The IAM bootstrap token and Grafana admin password are auto-generated
+by Pulumi.  After deployment, retrieve them with:
+```
+pulumi stack output iamToken --show-secrets
+pulumi stack output grafanaPassword --show-secrets
+```
+
+Login to Grafana with username `admin` and the password from the command
+above.
+
+To use the TrustGraph API with authentication:
+```
+export TRUSTGRAPH_TOKEN=$(pulumi stack output iamToken --show-secrets)
+```
+
 
 ## Destroy
 
@@ -186,7 +201,7 @@ The AI models specified in `config.json` should match the models deployed
 by Pulumi (gpt-4o, gpt-4o-mini, Mistral-Large-3, mistral-small-2503).
 
 ```
-./update-config aks-k8s 2.2.24
+./update-config aks-k8s 2.4.29
 ```
 
 ## Customizing memory settings

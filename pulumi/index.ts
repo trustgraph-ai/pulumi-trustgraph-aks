@@ -1,5 +1,6 @@
 
 import * as fs from 'fs';
+import * as pulumi from '@pulumi/pulumi';
 import { kubeconfig } from './cluster';
 import { sshKey } from './ssh-key';
 import * as application from './application';
@@ -40,6 +41,10 @@ kubeconfig.apply(
         );
     }
 );
+
+export const iamToken = pulumi.interpolate`tg_${secrets.iamBootstrapToken.result}`;
+
+export const grafanaPassword = secrets.grafanaAdminPassword.result;
 
 const save = [
     application,

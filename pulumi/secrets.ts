@@ -1,33 +1,52 @@
 
 import * as k8s from "@pulumi/kubernetes";
+import * as pulumi from "@pulumi/pulumi";
+import * as random from "@pulumi/random";
 
 import { appDeploy } from './application';
 import { aiHubEndpoint, apiKey1 } from './ai-keys';
 import { k8sProvider } from './cluster';
 
-export const gatewaySecret = new k8s.core.v1.Secret(
-    "gateway-secret",
+export const iamBootstrapToken = new random.RandomPassword(
+    "iam-bootstrap-token",
+    {
+        length: 32,
+        special: false,
+    },
+);
+
+export const grafanaAdminPassword = new random.RandomPassword(
+    "grafana-admin-password",
+    {
+        length: 16,
+        special: true,
+        overrideSpecial: "!@#$%^&*",
+    },
+);
+
+export const iamSecret = new k8s.core.v1.Secret(
+    "iam-bootstrap-token",
     {
         metadata: {
-            name: "gateway-secret",
+            name: "iam-bootstrap-token",
             namespace: "trustgraph"
         },
         stringData: {
-            "gateway-secret": ""
+            "token": pulumi.interpolate`tg_${iamBootstrapToken.result}`,
         },
     },
     { provider: k8sProvider, dependsOn: appDeploy }
 );
 
-export const mcpServerSecret = new k8s.core.v1.Secret(
-    "mcp-server-secret",
+export const grafanaSecret = new k8s.core.v1.Secret(
+    "grafana-secret",
     {
         metadata: {
-            name: "mcp-server-secret",
+            name: "grafana-secret",
             namespace: "trustgraph"
         },
         stringData: {
-            "mcp-server-secret": ""
+            "password": grafanaAdminPassword.result,
         },
     },
     { provider: k8sProvider, dependsOn: appDeploy }
