@@ -53,15 +53,15 @@ export const grafanaSecret = new k8s.core.v1.Secret(
 );
 
 export const aiSecret = new k8s.core.v1.Secret(
-    "openai-secret",
+    "azure-ai-credentials",
     {
         metadata: {
-            name: "openai-credentials",
+            name: "azure-ai-credentials",
             namespace: "trustgraph"
         },
         stringData: {
-            "openai-token": apiKey1,
-            "openai-url": aiHubEndpoint.apply(s => s + "openai/v1"),
+            "azure-token": apiKey1,
+            "azure-endpoint": aiHubEndpoint.apply(s => s.replace(/\/+$/, "") + "/openai/v1/chat/completions"),
         },
     },
     { provider: k8sProvider, dependsOn: appDeploy }

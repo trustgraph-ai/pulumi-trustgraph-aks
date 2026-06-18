@@ -3,7 +3,7 @@ import * as cognitiveservices from "@pulumi/azure-native/cognitiveservices";
 import { azureProvider } from './azure-provider';
 import { resourceGroup } from './resource-group';
 import { aiHub, aiHubEndpoint } from './ai-project';
-import { mistralSmall } from './ai-models';
+import { mistralLarge } from './ai-models';
 
 // Get API keys after all model deployments are complete
 export const apiKeys = cognitiveservices.listAccountKeysOutput(
@@ -11,7 +11,7 @@ export const apiKeys = cognitiveservices.listAccountKeysOutput(
         resourceGroupName: resourceGroup.name,
         accountName: aiHub.name,
     },
-    { provider: azureProvider, dependsOn: [aiHub, mistralSmall] }
+    { provider: azureProvider, dependsOn: [aiHub, mistralLarge] }
 );
 
 export const apiKey1 = apiKeys.apply(keys => keys?.key1 ?? "");

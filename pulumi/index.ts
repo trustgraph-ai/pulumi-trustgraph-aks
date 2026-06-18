@@ -7,6 +7,11 @@ import * as application from './application';
 import * as secrets from './secrets';
 import { aiHubEndpoint, aiProjectApiUrl } from './ai-project';
 import * as models from './ai-models';
+import { agcFqdn } from './agc';
+import * as albRoles from './alb-roles';
+
+import * as gateway from './gateway';
+import * as certManager from './cert-manager';
 
 sshKey.privateKeyOpenssh.apply(
     (key : string) => {
@@ -46,9 +51,13 @@ export const iamToken = pulumi.interpolate`tg_${secrets.iamBootstrapToken.result
 
 export const grafanaPassword = secrets.grafanaAdminPassword.result;
 
+export const agcFrontendFqdn = agcFqdn;
+
 const save = [
     application,
     secrets,
     models,
+    gateway,
+    certManager,
+    albRoles,
 ];
-
