@@ -300,9 +300,8 @@ Available models can be found in the Azure AI Foundry model catalog.
 ## Customizing memory settings
 
 The `config.json` file includes an `override` component that allows
-customization of memory settings for various services. Parameters use a
-prefix-routing convention where `component-parameter` routes to the
-component's parameter.
+customization of memory settings for various services.  Parameters are
+merged into the global parameters block.
 
 For example, in `config.json`:
 
@@ -312,17 +311,22 @@ For example, in `config.json`:
     "parameters": {
         "cassandra-heap": "500M",
         "cassandra-memory-limit": "2000M",
-        "pulsar-bookie-heap": "512m",
-        "pulsar-broker-memory-limit": "1500M",
+        "cassandra-memory-reservation": "2000M",
         "api-gateway-memory-limit": "768M",
-        "librarian-memory-limit": "1024M"
+        "api-gateway-memory-reservation": "768M"
     }
 }
 ```
 
-Available prefixes include:
-- `cassandra-` - Cassandra database settings (heap, memory-limit, memory-reservation)
-- `pulsar-` - Pulsar messaging settings (bookie-heap, broker-heap, etc.)
-- `qdrant-` - Qdrant vector store settings
-- `api-gateway-` - API gateway settings
-- `librarian-` - Librarian service settings
+Available parameters include:
+- `cassandra-heap` - Cassandra JVM heap size
+- `cassandra-memory-limit` - Cassandra container memory limit
+- `cassandra-memory-reservation` - Cassandra container memory reservation
+- `api-gateway-memory-limit` - API gateway container memory limit
+- `api-gateway-memory-reservation` - API gateway container memory reservation
+
+After changing memory settings, regenerate `resources.yaml`:
+
+```
+./update-config aks-k8s 2.5.16
+```
