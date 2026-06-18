@@ -1,6 +1,5 @@
 
 import * as azure from "@pulumi/azure-native";
-import * as azuread from "@pulumi/azuread";
 
 import { location } from './config';
 
@@ -10,18 +9,6 @@ export const azureProvider = new azure.Provider(
         location: location,
     }
 );
-
-/*
-export const azureADProvider = new azure.Provider(
-    "azure-ad-provider",
-    {
-        location: location,
-        tenantId: "xxx",
-    }
-);
-*/
-
-export const azureADProvider = undefined;
 
 export const subscriptionId = azure.authorization.getClientConfigOutput().
 apply(

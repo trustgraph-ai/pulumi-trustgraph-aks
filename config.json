@@ -4,11 +4,19 @@
         "parameters": {}
     },
     {
+        "name": "vector-store-qdrant",
+        "parameters": {}
+    },
+    {
         "name": "row-store-cassandra",
         "parameters": {}
     },
     {
-        "name": "vector-store-qdrant",
+        "name": "cassandra",
+        "parameters": {}
+    },
+    {
+        "name": "garage",
         "parameters": {}
     },
     {
@@ -24,34 +32,26 @@
         "parameters": {}
     },
     {
+        "name": "mcp-server",
+        "parameters": {}
+    },
+    {
         "name": "embeddings-fastembed",
         "parameters": {}
     },
     {
-        "name": "openai",
+        "name": "azure",
         "parameters": {
             "max-output-tokens": 4096,
 	    "models": {
 		"type": "string",
 		"description": "LLM model to use",
-		"default": "gpt-5.4-nano",
+		"default": "mistral-large-3",
 		"enum": [
 		    {
 			id: "mistral-large-3",
 			description: "Mistral Large 3"
-		    },
-		    {
-			id: "mistral-small",
-			description: "Mistral Small 2503"
-		    },
-		    {
-			id: "gpt-5.4-nano",
-			description: "ChatGPT 5.4 Nano"
-		    },
-		    {
-			id: "gpt-5.4-mini",
-			description: "ChatGPT 5.4 Mini"
-		    },
+		    }
 		],
 		"required": true
 	    }

@@ -9,15 +9,14 @@ platform.
 The full stack includes:
 
 - Its own resource group
-- An Azure Identity service principal account to run various components.
-- An AKS cluster deployed in its own resource group (that's just what Azure
-  does).
-- A key vault and storage account for the AI components (because, required)
-- Using AI Foundry, deploys an AI hub and project with 4 model deployments:
-  - gpt-4o
-  - gpt-4o-mini
-  - Mistral-Large-3
-  - mistral-small-2503
+- A VNet with dedicated subnets for AKS nodes and AGC
+- An AKS cluster with managed identity, workload identity, and the
+  ALB Controller addon for Gateway API support
+- Azure Application Gateway for Containers (AGC) providing public HTTPS
+  access via Gateway API
+- cert-manager with Let's Encrypt for automated TLS certificate management
+- A key vault and storage account for the AI components
+- Using AI Foundry, deploys an AI hub and project with Mistral-Large-3
 - Deploys a complete TrustGraph stack of resources in AKS
 
 Keys and other configuration for the AI components are configured into
@@ -32,12 +31,39 @@ but:
   because you can use test frameworks to test the infrastructure.
 
 Roadmap to deploy is:
+- Prerequisites (one-time)
 - Install Pulumi
 - Setup Pulumi
 - Configure your environment with Azure credentials using `az login`
 - Modify the local configuration to do what you want
 - Deploy
+- Configure DNS
 - Use the system
+
+## Prerequisites (one-time)
+
+The following Azure preview features must be registered on your
+subscription before deploying:
+
+```
+az feature register --namespace "Microsoft.ContainerService" --name "ApplicationLoadBalancerPreview"
+az provider register -n Microsoft.ContainerService
+```
+
+You can check registration status with:
+
+```
+az feature show --namespace "Microsoft.ContainerService" --name "ApplicationLoadBalancerPreview" --query "properties.state"
+```
+
+Wait until it shows `Registered` before deploying.
+
+The following resource providers must also be registered:
+
+```
+az provider register -n Microsoft.ServiceNetworking
+az provider register -n Microsoft.ContainerService
+```
 
 # Deploy
 
@@ -102,6 +128,15 @@ The `Pulumi.STACKNAME.yaml` configuration file contains settings for:
 - `trustgraph-azure:node-size` - The VM size for AKS nodes
   e.g. `Standard_D8s_v5`
 - `trustgraph-azure:node-count` - Number of nodes in the AKS cluster
+- `trustgraph-azure:domain` - Domain name for TrustGraph UI
+  e.g. `azure1.dev.trustgraph.ai`
+- `trustgraph-azure:grafana-domain` - Domain name for Grafana
+  e.g. `grafana.azure1.dev.trustgraph.ai`
+- `trustgraph-azure:letsencrypt-email` - Email address for Let's Encrypt
+  certificate notifications
+- `trustgraph-azure:llm-quota` - LLM model quota in thousands of
+  tokens-per-minute (TPM).  Default: `10`.  Increase if you hit rate
+  limiting under normal usage
 
 ## Deploy
 
@@ -116,6 +151,7 @@ If everything works:
   to the Kubernetes cluster.
 - A file, `ssh-private.key` will contain a secret SSH
   login key for the K8s instances.  You shouldn't need to use this.
+- The AGC Frontend FQDN will be output as `agcFrontendFqdn`.
 
 To connect to the Kubernetes cluster...
 
@@ -129,21 +165,38 @@ assuming it must be a glitch in Azure.  The work-around on deploy errors
 is to retry `pulumi up` - it's a retryable command and will continue from
 where it left off.
 
+## Configure DNS
+
+After deployment, create two CNAME records pointing to the AGC Frontend
+FQDN (shown in the `agcFrontendFqdn` output):
+
+| Record | Type | Target |
+|--------|------|--------|
+| Your `domain` value | CNAME | AGC Frontend FQDN |
+| Your `grafana-domain` value | CNAME | AGC Frontend FQDN |
+
+For example:
+```
+azure1.dev.trustgraph.ai      CNAME  dxdkh0dpeuckfzek.fz11.alb.azure.com
+grafana.azure1.dev.trustgraph.ai  CNAME  dxdkh0dpeuckfzek.fz11.alb.azure.com
+```
+
+Once DNS resolves, cert-manager will automatically provision TLS
+certificates via Let's Encrypt. This typically takes a few minutes.
+
 ## Use the system
 
-To get access to TrustGraph using the `kube.cfg` file, set up some
-port-forwarding.  You'll need multiple terminal windows to run each of
-these commands:
+Once DNS and TLS are configured, access the services directly:
+
+- TrustGraph UI: `https://<domain>`
+- Grafana: `https://<grafana-domain>`
+
+You can also use port-forwarding with the `kube.cfg` file if needed:
 
 ```
 kubectl --kubeconfig kube.cfg -n trustgraph port-forward service/api-gateway 8088:8088
-kubectl --kubeconfig kube.cfg -n trustgraph port-forward service/workbench-ui 8888:8888
 kubectl --kubeconfig kube.cfg -n trustgraph port-forward service/grafana 3000:3000
 ```
-
-This will allow you to access Grafana and the Workbench UI from your local
-browser using `http://localhost:3000` and `http://localhost:8888`
-respectively.
 
 The IAM bootstrap token and Grafana admin password are auto-generated
 by Pulumi.  After deployment, retrieve them with:
@@ -183,26 +236,66 @@ az quota update --resource-name "standardDSv5Family" \
 Adjust the `--resource-name` and location to match your `node-size` and
 `location` settings in `Pulumi.STACKNAME.yaml`.
 
+## LLM quota
+
+The Mistral-Large-3 model is deployed with a default quota of 10K
+tokens-per-minute (TPM) on GlobalStandard.  If you see rate limiting
+errors in the `text-completion` pod logs, increase the quota:
+
+```yaml
+trustgraph-azure:llm-quota: 20
+```
+
+Azure may also impose subscription-level quota limits on model deployments.
+You can check and request increases in the Azure portal under
+**AI Foundry > Quotas**.
+
 ## Changing the deployed models
 
-The AI models are defined in `pulumi/ai-models.ts`. Each model is deployed
-as a `cognitiveservices.Deployment` resource. To change the models:
+To use a different model, three things need to change:
 
-1. Edit `pulumi/ai-models.ts` to add, remove, or modify model deployments
-2. Ensure the `dependsOn` chain is maintained so models deploy sequentially
-   (Azure doesn't handle parallel model deployments well)
-3. Update `resources.yaml` to reference the models you want TrustGraph to use
+1. **Deploy the model in Azure** — edit `pulumi/ai-models.ts` to add or
+   change the `cognitiveservices.Deployment` resource.  Set the
+   `deploymentName`, `model.name`, `model.format`, and `model.version`
+   to match the model from the Azure AI Foundry catalog.  If deploying
+   multiple models, maintain a `dependsOn` chain so they deploy
+   sequentially (Azure doesn't handle parallel model deployments well).
+
+2. **Update `config.json`** — the `azure` component's `models` field
+   controls which models appear in the TrustGraph UI dropdown.  Change
+   the `default` and `enum` to match your deployed models:
+
+   ```json
+   {
+       "name": "azure",
+       "parameters": {
+           "max-output-tokens": 4096,
+           "models": {
+               "type": "string",
+               "description": "LLM model to use",
+               "default": "your-model-name",
+               "enum": [
+                   {
+                       "id": "your-model-name",
+                       "description": "Your Model Display Name"
+                   }
+               ],
+               "required": true
+           }
+       }
+   }
+   ```
+
+   The `id` must match the `deploymentName` in `ai-models.ts`.
+
+3. **Regenerate `resources.yaml`** — run the config generator to
+   rebuild the Kubernetes resource definitions:
+
+   ```
+   ./update-config aks-k8s 2.5.16
+   ```
 
 Available models can be found in the Azure AI Foundry model catalog.
-
-## How the config was built
-
-The AI models specified in `config.json` should match the models deployed
-by Pulumi (gpt-4o, gpt-4o-mini, Mistral-Large-3, mistral-small-2503).
-
-```
-./update-config aks-k8s 2.4.29
-```
 
 ## Customizing memory settings
 
@@ -233,4 +326,3 @@ Available prefixes include:
 - `qdrant-` - Qdrant vector store settings
 - `api-gateway-` - API gateway settings
 - `librarian-` - Librarian service settings
-

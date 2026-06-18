@@ -4,3 +4,7 @@ config:
   trustgraph-azure:environment: dev
   trustgraph-azure:node-size: "Standard_D8s_v5"
   trustgraph-azure:node-count: 2
+  trustgraph-azure:domain: "mydomain.whatever.example.com"
+  trustgraph-azure:grafana-domain: "grafana.mydomain.whatever.example.com"
+  trustgraph-azure:letsencrypt-email: "admin@example.com"
+  trustgraph-azure:llm-quota: 10

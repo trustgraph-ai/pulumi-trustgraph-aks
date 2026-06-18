@@ -1,52 +1,75 @@
 
 import * as pulumi from "@pulumi/pulumi";
+import * as resources from "@pulumi/azure-native/resources";
 import * as containerservice from "@pulumi/azure-native/containerservice";
 import * as k8s from "@pulumi/kubernetes";
 
 import { resourceGroup } from './resource-group';
 import { vmSize, vmCount, location, prefix } from './config';
 import { sshKey } from './ssh-key';
-import {
-    clusterPrincipal, clusterPrincipalPassword
-} from './service-principal';
 import { azureProvider } from './azure-provider';
+import { aksSubnet } from './networking';
 
-// Create an Azure Kubernetes Service (AKS) cluster
-export const cluster = new containerservice.ManagedCluster(
+export const cluster = new resources.Resource(
     "cluster",
     {
-        resourceName: prefix,
+        resourceProviderNamespace: "Microsoft.ContainerService",
+        resourceType: "managedClusters",
+        parentResourcePath: "",
+        apiVersion: "2025-10-02-preview",
         resourceGroupName: resourceGroup.name,
-        agentPoolProfiles: [{
-            count: vmCount,
-            maxPods: 110,
-            mode: "System",
-            name: "agentpool",
-            osType: "Linux",
-            type: "VirtualMachineScaleSets",
-            vmSize: vmSize,
-        }],
-        dnsPrefix: pulumi.interpolate`${resourceGroup.name}-aks`,
-        enableRBAC: true,
-        kubernetesVersion: "1.32.0", // FIXME: 1.33.6
-        linuxProfile: {
-            adminUsername: "aksuser",
-            ssh: {
-                publicKeys: [
-                    {
-                        keyData: sshKey.publicKeyOpenssh
-                    }
-                ],
-            },
+        resourceName: prefix,
+        location: location,
+        identity: {
+            type: "SystemAssigned",
         },
-        nodeResourceGroup: pulumi.interpolate`${resourceGroup.name}-node-rg`,
-        servicePrincipalProfile: {
-            clientId: clusterPrincipal.clientId,
-            secret: clusterPrincipalPassword.value,
+        properties: {
+            kubernetesVersion: "1.35.5",
+            dnsPrefix: pulumi.interpolate`${resourceGroup.name}-aks`,
+            enableRBAC: true,
+            agentPoolProfiles: [{
+                count: vmCount,
+                maxPods: 110,
+                mode: "System",
+                name: "agentpool",
+                osType: "Linux",
+                type: "VirtualMachineScaleSets",
+                vmSize: vmSize,
+                vnetSubnetID: aksSubnet.id,
+            }],
+            linuxProfile: {
+                adminUsername: "aksuser",
+                ssh: {
+                    publicKeys: [
+                        {
+                            keyData: sshKey.publicKeyOpenssh,
+                        },
+                    ],
+                },
+            },
+            nodeResourceGroup: pulumi.interpolate`${resourceGroup.name}-node-rg`,
+            networkProfile: {
+                networkPlugin: "azure",
+                networkPluginMode: "overlay",
+                serviceCidr: "10.2.0.0/16",
+                dnsServiceIP: "10.2.0.10",
+            },
+            oidcIssuerProfile: { enabled: true },
+            securityProfile: {
+                workloadIdentity: { enabled: true },
+            },
+            ingressProfile: {
+                gatewayAPI: {
+                    installation: "Standard",
+                },
+                applicationLoadBalancer: {
+                    enabled: true,
+                },
+            },
         },
         sku: {
             name: "Base",
-            tier: containerservice.ManagedClusterSKUTier.Free,
+            tier: "Free",
         },
     },
     {
@@ -54,7 +77,6 @@ export const cluster = new containerservice.ManagedCluster(
     }
 );
 
-// Export the kubeconfig
 export const kubeconfig = pulumi.all(
     [cluster.name, resourceGroup.name]
 ).apply(
@@ -68,11 +90,9 @@ export const kubeconfig = pulumi.all(
     }
 );
 
-// Create a Kubernetes provider instance using the kubeconfig
 export const k8sProvider = new k8s.Provider(
     "k8s-provider",
     {
         kubeconfig: kubeconfig,
     }
 );
-
